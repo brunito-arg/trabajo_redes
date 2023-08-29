@@ -8,6 +8,14 @@
 using namespace std;
 HANDLE console = GetStdHandle (STD_OUTPUT_HANDLE);
 
+
+//ESTRUCTURA DE LAS DOS VARAIBLES
+typedef struct traductor{
+    char ing[30];
+    char esp[30];
+};
+
+
 int main()
 {
     cout << "Hello world!" << endl;
