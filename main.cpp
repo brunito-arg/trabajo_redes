@@ -5,15 +5,16 @@
 #include <string.h>
 #include <iostream>
 
+
 using namespace std;
 HANDLE console = GetStdHandle (STD_OUTPUT_HANDLE);
 
 
 //ESTRUCTURA DE LAS DOS VARAIBLES
-typedef struct{
+typedef struct traductor{
     char ing[30];
     char esp[30];
-}tra;
+};
 
 //PROTOTIPOS DE LAS FUNCIONES
 void dibujarConsola(int x1,int y1,int x2,int y2);
