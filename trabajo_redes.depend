@@ -1,4 +1,17 @@
 # depslib dependency file v1.0
-1584205420 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\main.cpp
+1693324687 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<windows.h>
+	<string.h>
+	<iostream>
+
+1693325763 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\login.cpp
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<windows.h>
+	<string.h>
 	<iostream>
 
