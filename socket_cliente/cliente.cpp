@@ -19,7 +19,8 @@ int main()
     {
         int op;
 
-        std::cout << "BIENVENIDO INGRESE UNA OPCION: ";
+
+        std::cout << "BIENVENIDO INGRESE UNA OPCION: \n";
 
          std::cout << "1- Traducir(rol CONSULTA)\n";
          std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
@@ -30,38 +31,40 @@ int main()
 
          switch(op){
             case 1:
-            std::cout << "traduccion";
+            std::cout << "traduccion\n";
             break;
 
             case 2:
-            std::cout << "nueva traduccion ejecutandose";
+            std::cout << "nueva traduccion ejecutandose\n";
             break;
 
             case 3:
-            std::cout << "usuarios del sistema";
+            std::cout << "usuarios del sistema\n";
             break;
 
             case 4:
-            std::cout << "registro de actividades";
+            std::cout << "registro de actividades\n";
             break;
 
             case 5:
-            std::cout << "se cerro la sesion";
+            std::cout << "se cerro la sesion\n";
             break;
 
          }
+
 
         initWinSock(WsaData);
         initSock(Sock);
         initSockAddr(DireccionServer);
         connectSock(Sock, DireccionServer);
 
+        char rta = 'P';
         send(Sock,(char *)& op,sizeof(op),0);
 
-        float rta;
+
         recv(Sock,(char *)& rta, sizeof(rta),0);
 
-        std::cout << "El doble es: " << rta << "\n\n";
+     //   std::cout << "Opcion elegida es: &s" << rta << "\n\n";
         closesocket (Sock);
     }
     while(1);

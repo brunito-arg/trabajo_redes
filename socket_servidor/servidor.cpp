@@ -59,11 +59,11 @@ int main()
     recv (SockConexion, (char *)&Dato, sizeof (Dato), 0);
 
     //y luego deberá enviar la respuesta:
-    char Rta;
+    float Rta = 1;
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
 
     //imprime
-    printf ("Dato recibido: %c, Respuesta enviada: %c\n", Dato, Rta);
+    printf ("Dato recibido: %c, Respuesta enviada: %f\n", Dato, Rta);
     closesocket(SockConexion);
     }while(1);
 
