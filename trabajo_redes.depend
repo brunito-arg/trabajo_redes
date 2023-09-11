@@ -1,8 +1,5 @@
 # depslib dependency file v1.0
-1694386920 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\main.cpp
-	<iostream>
-	<cstring>
-	<winsock2.h>
+1694459616 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\main.cpp
 
 1693325763 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\login.cpp
 	<stdio.h>
@@ -11,4 +8,15 @@
 	<windows.h>
 	<string.h>
 	<iostream>
+
+1694459366 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\cliente.cpp
+	<iostream>
+	<cstring>
+	<winsock2.h>
+
+1694462485 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\servidor.cpp
+	<cstring>
+	<winsock2.h>
+	<iostream>
+	<winsock2.h>
 
