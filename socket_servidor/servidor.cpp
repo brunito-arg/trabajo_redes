@@ -55,15 +55,15 @@ int main()
     }
 
     //El servidor, deberá iniciar una lectura en el socket, esperando recibir información
-    float Dato;
+    char Dato;
     recv (SockConexion, (char *)&Dato, sizeof (Dato), 0);
 
     //y luego deberá enviar la respuesta:
-    float Rta = Dato * 2;
+    char Rta;
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
 
     //imprime
-    printf ("Dato recibido: %f, Respuesta enviada: %f\n", Dato, Rta);
+    printf ("Dato recibido: %c, Respuesta enviada: %c\n", Dato, Rta);
     closesocket(SockConexion);
     }while(1);
 

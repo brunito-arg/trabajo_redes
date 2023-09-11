@@ -13,19 +13,50 @@ int main()
     SOCKET Sock;
     SOCKADDR_IN DireccionServer;
 
+
     //se va a pedir un numero y mandarselo al sever
     do
     {
-        float snd;
-        std::cout << "Escribi un numero: ";
-        std::cin >> snd;
+        int op;
+
+        std::cout << "BIENVENIDO INGRESE UNA OPCION: ";
+
+         std::cout << "1- Traducir(rol CONSULTA)\n";
+         std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
+         std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
+         std::cout << "4- Ver registro de actividades (rol ADMIN)\n";
+         std::cout << "5- Cerrar sesion(ambos roles)\n";
+         std::cin >> op;
+
+         switch(op){
+            case 1:
+            std::cout << "traduccion";
+            break;
+
+            case 2:
+            std::cout << "nueva traduccion ejecutandose";
+            break;
+
+            case 3:
+            std::cout << "usuarios del sistema";
+            break;
+
+            case 4:
+            std::cout << "registro de actividades";
+            break;
+
+            case 5:
+            std::cout << "se cerro la sesion";
+            break;
+
+         }
 
         initWinSock(WsaData);
         initSock(Sock);
         initSockAddr(DireccionServer);
         connectSock(Sock, DireccionServer);
 
-        send(Sock,(char *)& snd,sizeof(snd),0);
+        send(Sock,(char *)& op,sizeof(op),0);
 
         float rta;
         recv(Sock,(char *)& rta, sizeof(rta),0);
@@ -41,6 +72,7 @@ int main()
 
     return 0;
 }
+
 
 void initWinSock(WSADATA &WsaData)
 {
