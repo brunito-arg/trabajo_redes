@@ -63,7 +63,7 @@ int main()
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
 
     //imprime
-    printf ("Dato recibido: %c, Respuesta enviada: %f\n", Dato, Rta);
+    printf ("Dato recibido: %c, Respuesta enviada: %f\n", Dato, Rta);  //no me da lo que quiero !
     closesocket(SockConexion);
     }while(1);
 
