@@ -59,12 +59,30 @@ int main()
     recv (SockConexion, (char *)&Dato, sizeof (Dato), 0);
 
     //y luego deberá enviar la respuesta:
-    float Rta = 1;
+    char Rta = 'K';
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
 
     //imprime
-    printf ("Dato recibido: %c, Respuesta enviada: %f\n", Dato, Rta);  //no me da lo que quiero !
+    printf ("Dato recibido: %c, Respuesta enviada: %c\n", Dato, Rta);  //no me da lo que quiero !
     closesocket(SockConexion);
+
+
+    //ARCHIVO DE USUARIOS
+    FILE *puntero;
+    puntero = fopen ("credenciales.txt", "r"); //lee el archivo
+
+    char aux[40] = " ";
+    fgets(aux,40,puntero);
+
+
+    recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
+
+    send (SockConexion, (char *)&aux, sizeof(aux), 0);
+
+    //imprime
+    printf("USUARIO: %s", aux);
+
+    fclose(puntero);
     }while(1);
 
      // No longer need server socket
@@ -72,6 +90,5 @@ int main()
 
 
     WSACleanup();
-
     return 0;
 }
