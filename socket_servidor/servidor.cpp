@@ -55,7 +55,7 @@ int main()
     }
 
     //El servidor, deberá iniciar una lectura en el socket, esperando recibir información
-    char Dato;
+    int Dato;
     recv (SockConexion, (char *)&Dato, sizeof (Dato), 0);
 
     //y luego deberá enviar la respuesta:
@@ -63,12 +63,13 @@ int main()
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
 
     //imprime
-    printf ("Dato recibido: %c, Respuesta enviada: %c\n", Dato, Rta);  //no me da lo que quiero !
+    printf ("Dato recibido: %d, Respuesta enviada: %c\n", Dato, Rta);  //no me da lo que quiero !
     closesocket(SockConexion);
 
 
     //ARCHIVO DE USUARIOS
-    FILE *puntero;
+    if(Dato==3){
+         FILE *puntero;
     puntero = fopen ("credenciales.txt", "r"); //lee el archivo
 
     char aux[40] = " ";
@@ -83,7 +84,9 @@ int main()
     printf("USUARIO: %s", aux);
 
     fclose(puntero);
-    }while(1);
+    }
+
+        }while(1);
 
      // No longer need server socket
     closesocket(SockEscucha);

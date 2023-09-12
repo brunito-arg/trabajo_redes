@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1694467114 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\cliente.cpp
+1694546919 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\cliente.cpp
 	<iostream>
 	<windows.h>
 	<winsock.h>

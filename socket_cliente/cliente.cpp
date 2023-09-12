@@ -58,10 +58,10 @@ int main()
         initSockAddr(DireccionServer);
         connectSock(Sock, DireccionServer);
 
-        char rta = 'P';
+
         send(Sock,(char *)& op,sizeof(op),0);
 
-
+        char rta = 'P';
         recv(Sock,(char *)& rta, sizeof(rta),0);
 
      //   std::cout << "Opcion elegida es: &s" << rta << "\n\n";
