@@ -73,34 +73,37 @@ int main()
     //VALIDAR USUARIO Y CONTRASEÑA
 
     if(Dato == 4){
-        FILE *puntero;
-        puntero = fopen ("credenciales.txt", "r");//lee el archivo;
 
-     char linea[30];
-     char *p;
-     int i = 0;
-     char aux[30];
+        std::ifstream archivo("credenciales.txt");
 
-     fgets(linea, 30, puntero);
-     while(!feof(puntero)){
-        i++;
-        if(p==strstr(linea,"bruno|pepitos123|ADMIN|3")){
-            sscanf(p, "%s", aux);
+        std::string linea;
+
+        while(std::getline(archivo, linea)){
+            std::istringstream ss(linea);
+            std::string usuario, contrasena, rol;
+            int intentos;
+
+             if (std::getline(ss, usuario, '|') && std::getline(ss, contrasena, '|') && std::getline(ss, rol, '|') && (ss >> intentos)){
+
+            std::cout << "Usuario: " << usuario << std::endl;
+            std::cout << "Contraseña: " << contrasena << std::endl;
+
+
+            recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
+
+            send (SockConexion, (char *)&usuario, sizeof(usuario), 0);
+
+
+            } else {
+
+                std::cerr << "Formato de línea incorrecto en el archivo de credenciales: " << linea << std::endl;
+            }
         }
-            if(!strcmp(aux,"bruno|pepitos123|ADMIN|3"))
-                break;
-            fgets(linea, 30, puntero);
-     }
 
-    recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
 
-    send (SockConexion, (char *)&aux, sizeof(aux), 0);
 
-     printf("\nline: %d\n", i);
+    }
 
-      fclose(puntero);
-
-}
 
 
 

@@ -28,7 +28,7 @@ int main()
          std::cout << "1- Traducir(rol CONSULTA)\n";
          std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
          std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
-         std::cout << "4- Ver registro de actividades (rol ADMIN)\n";
+         std::cout << "4- Ingresar usuario y contraseña (provisorio)\n";
          std::cout << "5- Cerrar sesion(ambos roles)\n";
          std::cin >> op;
 
