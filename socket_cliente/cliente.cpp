@@ -9,6 +9,7 @@ void initWinSock(WSADATA & WsaData);
 void initSock(SOCKET & Sock);
 void initSockAddr(SOCKADDR_IN & DireccionServer);
 void connectSock(SOCKET & Sock, SOCKADDR_IN & DireccionServer);
+void ingresarUsuario();
 
 int main()
 {
@@ -46,7 +47,7 @@ int main()
             break;
 
             case 4:
-            std::cout << "registro de actividades\n";
+            ingresarUsuario();
             break;
 
             case 5:
@@ -77,6 +78,34 @@ int main()
     WSACleanup();
 
     return 0;
+}
+
+void ingresarUsuario(){
+    WSADATA WsaData;
+    SOCKET Sock;
+    SOCKADDR_IN DireccionServer;
+
+    std::string usuario;
+    std::string contrasena;
+
+    printf ("ingrese el usuario: ");
+    std::cin >> usuario;
+
+    printf ("ingrese la contrasena: ");
+    std::cin >> contrasena;
+
+    initWinSock(WsaData);
+        initSock(Sock);
+        initSockAddr(DireccionServer);
+        connectSock(Sock, DireccionServer);
+
+
+     send(Sock,(char *)& usuario,sizeof(usuario),0);
+
+     send(Sock,(char *)& contrasena,sizeof(contrasena),0);
+
+      WSACleanup();
+
 }
 
 
