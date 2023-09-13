@@ -1,5 +1,8 @@
 #include <iostream>
 #include <winsock2.h>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 int main()
 {
@@ -65,6 +68,42 @@ int main()
     //imprime
     printf ("Dato recibido: %d, Respuesta enviada: %c\n", Dato, Rta);  //no me da lo que quiero !
     closesocket(SockConexion);
+
+
+    //VALIDAR USUARIO Y CONTRASEÑA
+
+    if(Dato == 4){
+        FILE *puntero;
+        puntero = fopen ("credenciales.txt", "r");//lee el archivo;
+
+     char linea[30];
+     char *p;
+     int i = 0;
+     char aux[30];
+
+     fgets(linea, 30, puntero);
+     while(!feof(puntero)){
+        i++;
+        if(p==strstr(linea,"bruno|pepitos123|ADMIN|3")){
+            sscanf(p, "%s", aux);
+        }
+            if(!strcmp(aux,"bruno|pepitos123|ADMIN|3"))
+                break;
+            fgets(linea, 30, puntero);
+     }
+
+    recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
+
+    send (SockConexion, (char *)&aux, sizeof(aux), 0);
+
+     printf("\nline: %d\n", i);
+
+      fclose(puntero);
+
+}
+
+
+
 
 
     //ARCHIVO DE USUARIOS

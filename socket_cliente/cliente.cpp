@@ -1,6 +1,9 @@
 #include <iostream>
 #include <windows.h>
 #include <winsock.h>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 void initWinSock(WSADATA & WsaData);
 void initSock(SOCKET & Sock);
