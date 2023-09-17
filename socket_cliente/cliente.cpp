@@ -117,7 +117,7 @@ void traduccion(){
     SOCKADDR_IN DireccionServer;
 
     std::string palabraIngles;
-    std::string palabraEspanol;
+    //std::string palabraEspanol;
 
     printf ("ingrese el palabra en ingles: ");
     std::cin >> palabraIngles;
@@ -129,6 +129,18 @@ void traduccion(){
 
 
      send(Sock,(char *)& palabraIngles,sizeof(palabraIngles),0);
+
+
+    char palabraEspanol[256];
+    int bytesRecibidos = recv(Sock, palabraEspanol, sizeof(palabraEspanol), 0);
+
+    if( bytesRecibidos <= 0){
+        std::cerr << "Error al recibir la traducción o conexión perdida." << std::endl;
+    }else{
+         std::cout << "Traduccion recibida del servidor: " << palabraEspanol << std::endl;
+    }
+
+
 
      //send(Sock,(char *)& contrasena,sizeof(contrasena),0);
 

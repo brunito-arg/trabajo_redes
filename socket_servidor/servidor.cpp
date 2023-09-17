@@ -62,8 +62,15 @@ int main()
     recv (SockConexion, (char *)&Dato, sizeof (Dato), 0);
 
     //y luego deberá enviar la respuesta:
-    char Rta = 'K';
+    char Rta [256];
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
+
+
+    char palabraIngles[256];
+    recv(SockConexion, (char *)&palabraIngles, sizeof(palabraIngles), 0);
+
+    char palabraEspanol[256];
+//     recv(SockConexion, (char *)&palabraEspanol, sizeof(palabraEspanol), 0);
 
     char palabra[30];
     recv(SockConexion, (char *)&palabra, sizeof (palabra), 0);
@@ -108,41 +115,73 @@ int main()
     }
 
     //TRADUCCION
-
-    if(Dato == 1){
-
+/*
+    if (Dato == 1) {
         std::ifstream archivo("traduccion.txt");
+
+        std::string palabra; // Supongo que palabra es un std::string
+
+        recv(SockConexion, (char *)&palabra, sizeof(palabra), 0);
+
+        std::cout << palabra << std::endl;
 
         std::string linea;
 
-        recv(SockConexion, (char *)&palabra, sizeof (palabra), 0);
-
-        while(std::getline(archivo, linea)){
+        while (std::getline(archivo, linea)) {
             std::istringstream ss(linea);
             std::string palabraIngles, palabraEspanol;
 
-             if (std::getline(ss, palabraIngles, ':') == palabra){ //solucionar esto no puedo hacer el ==
+            std::getline(ss, palabraIngles, ':'); // Leemos palabraIngles desde la línea
 
-            std::cout << "La traduccion de: " << palabraIngles << std::endl;
-            std::cout << "Es la palabra: " << palabraEspanol << std::endl;
+            if (palabra == palabraIngles) { // Comparamos palabra con palabraIngles usando ==
+                std::cout << "La traducción de: " << palabraIngles << std::endl;
+                std::cout << "Es la palabra: " << palabraEspanol << std::endl;
 
+                recv(SockConexion, (char *)&Dato, sizeof(Dato), 0);
 
-            recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
-
-            send (SockConexion, (char *)&palabraEspanol, sizeof(palabraEspanol), 0);
-
-
+                send(SockConexion, (char *)&palabraEspanol, sizeof(palabraEspanol), 0);
             } else {
+                std::cerr << "Esa palabra no se encuentra para traducir." <<std::endl;
+            }
+        }
+    }
 
-                std::cerr << "Formato de línea incorrecto en el archivo de credenciales: " << linea << std::endl;
+*/
+
+    if (Dato == 1){
+
+        std::ifstream archivo ("traduccion.txt");
+
+        std::string linea;
+
+        bool traduccionEncontrada;
+
+        archivo.clear();
+        archivo.seekg(0);
+
+        while(std::getline(archivo, linea)){
+            std::size_t pos = linea.find(':');
+            if(pos != std::string::npos){
+                std::string palabraEsp = linea.substr(0, pos);
+                std::string palabraIng = linea.substr(pos + 1);
+
+                if(palabraIng == palabraIngles){
+                    strcpy(palabraEspanol, palabraEsp.c_str());
+                    traduccionEncontrada = true;
+                    break;
+                }
             }
         }
 
+         if (!traduccionEncontrada) {
+            strcpy(palabraEspanol, "No se encontró traducción.");
+        }
 
+        //enviar traduccion al cliente
+
+        send(SockConexion, palabraEspanol, strlen(palabraEspanol), 0);
 
     }
-
-
 
 
 
