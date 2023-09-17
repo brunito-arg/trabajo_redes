@@ -82,6 +82,58 @@ int main()
     return 0;
 }
 
+//TRADUCCION
+void traduccion(){
+    WSADATA WsaData;
+    SOCKET Sock;
+    SOCKADDR_IN DireccionServer;
+
+    initWinSock(WsaData);
+        initSock(Sock);
+        initSockAddr(DireccionServer);
+        connectSock(Sock, DireccionServer);
+
+
+    std::string palabraIngles;
+    std::string palabraEspanol = "pepino";
+
+    //char palabraIngles[250];
+
+
+    std::cout << "Ingresa una palabra en inglés para traducir: ";
+    std::cin >> palabraIngles;
+
+
+
+     send(Sock, palabraIngles.c_str(), palabraIngles.size(), 0);
+
+
+     char buffer[256];
+     int bytesRecibidos = recv(Sock, buffer, sizeof(buffer), 0);
+
+        if (bytesRecibidos <= 0) {
+        std::cerr << "Error al recibir la traduccion o conexion perdida." << std::endl;
+    } else {
+        buffer[bytesRecibidos] = '\0';
+        std::string palabraEspanol = buffer;
+        std::cout << "Traduccion recibida del servidor: " << palabraEspanol << std::endl;
+    }
+
+           WSACleanup();
+    }
+
+
+
+     //send(Sock,(char *)& contrasena,sizeof(contrasena),0);
+
+
+
+
+
+
+
+
+
 void ingresarUsuario(){
     WSADATA WsaData;
     SOCKET Sock;
@@ -110,43 +162,7 @@ void ingresarUsuario(){
 
 }
 
-//TRADUCCION
-void traduccion(){
-    WSADATA WsaData;
-    SOCKET Sock;
-    SOCKADDR_IN DireccionServer;
 
-    std::string palabraIngles;
-    //std::string palabraEspanol;
-
-    printf ("ingrese el palabra en ingles: ");
-    std::cin >> palabraIngles;
-
-    initWinSock(WsaData);
-        initSock(Sock);
-        initSockAddr(DireccionServer);
-        connectSock(Sock, DireccionServer);
-
-
-     send(Sock,(char *)& palabraIngles,sizeof(palabraIngles),0);
-
-
-    char palabraEspanol[256];
-    int bytesRecibidos = recv(Sock, palabraEspanol, sizeof(palabraEspanol), 0);
-
-    if( bytesRecibidos <= 0){
-        std::cerr << "Error al recibir la traducción o conexión perdida." << std::endl;
-    }else{
-         std::cout << "Traduccion recibida del servidor: " << palabraEspanol << std::endl;
-    }
-
-
-
-     //send(Sock,(char *)& contrasena,sizeof(contrasena),0);
-
-      WSACleanup();
-
-}
 
 
 void initWinSock(WSADATA &WsaData)

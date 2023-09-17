@@ -47,6 +47,7 @@ int main()
     }
 
     SOCKET SockConexion;
+    SOCKET SockTest;
     do{
     //accept espera la llegada de conexiones y duplica el socket en el nuevo
     SockConexion = accept (SockEscucha, NULL, NULL);
@@ -66,11 +67,10 @@ int main()
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
 
 
-    char palabraIngles[256];
-    recv(SockConexion, (char *)&palabraIngles, sizeof(palabraIngles), 0);
+
 
     char palabraEspanol[256];
-//     recv(SockConexion, (char *)&palabraEspanol, sizeof(palabraEspanol), 0);
+     recv(SockConexion, (char *)&palabraEspanol, sizeof(palabraEspanol), 0);
 
     char palabra[30];
     recv(SockConexion, (char *)&palabra, sizeof (palabra), 0);
@@ -159,6 +159,12 @@ int main()
         archivo.clear();
         archivo.seekg(0);
 
+         //char palabraIngles[256];
+         std::string palabraIngles;
+         std::string palabraEspanol;
+
+         recv(SockConexion, (char *)&palabraIngles, sizeof(palabraIngles), 0);
+
         while(std::getline(archivo, linea)){
             std::size_t pos = linea.find(':');
             if(pos != std::string::npos){
@@ -166,20 +172,21 @@ int main()
                 std::string palabraIng = linea.substr(pos + 1);
 
                 if(palabraIng == palabraIngles){
-                    strcpy(palabraEspanol, palabraEsp.c_str());
+                    palabraEspanol = palabraEsp;
                     traduccionEncontrada = true;
+
                     break;
                 }
             }
         }
 
          if (!traduccionEncontrada) {
-            strcpy(palabraEspanol, "No se encontró traducción.");
+//            strcpy(palabraEspanol, "No se encontró traducción.");
         }
 
         //enviar traduccion al cliente
 
-        send(SockConexion, palabraEspanol, strlen(palabraEspanol), 0);
+       send(SockConexion, palabraEspanol.c_str(), palabraEspanol.size(), 0);
 
     }
 
