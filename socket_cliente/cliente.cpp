@@ -10,6 +10,7 @@ void initSock(SOCKET & Sock);
 void initSockAddr(SOCKADDR_IN & DireccionServer);
 void connectSock(SOCKET & Sock, SOCKADDR_IN & DireccionServer);
 void ingresarUsuario();
+void traduccion();
 
 int main()
 {
@@ -36,6 +37,7 @@ int main()
          switch(op){
             case 1:
             std::cout << "traduccion\n";
+            traduccion();
             break;
 
             case 2:
@@ -103,6 +105,32 @@ void ingresarUsuario(){
      send(Sock,(char *)& usuario,sizeof(usuario),0);
 
      send(Sock,(char *)& contrasena,sizeof(contrasena),0);
+
+      WSACleanup();
+
+}
+
+//TRADUCCION
+void traduccion(){
+    WSADATA WsaData;
+    SOCKET Sock;
+    SOCKADDR_IN DireccionServer;
+
+    std::string palabraIngles;
+    std::string palabraEspanol;
+
+    printf ("ingrese el palabra en ingles: ");
+    std::cin >> palabraIngles;
+
+    initWinSock(WsaData);
+        initSock(Sock);
+        initSockAddr(DireccionServer);
+        connectSock(Sock, DireccionServer);
+
+
+     send(Sock,(char *)& palabraIngles,sizeof(palabraIngles),0);
+
+     //send(Sock,(char *)& contrasena,sizeof(contrasena),0);
 
       WSACleanup();
 

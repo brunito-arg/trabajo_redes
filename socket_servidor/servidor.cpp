@@ -65,6 +65,9 @@ int main()
     char Rta = 'K';
     send (SockConexion, (char *)&Rta, sizeof (Rta), 0);
 
+    char palabra[30];
+    recv(SockConexion, (char *)&palabra, sizeof (palabra), 0);
+
     //imprime
     printf ("Dato recibido: %d, Respuesta enviada: %c\n", Dato, Rta);  //no me da lo que quiero !
     closesocket(SockConexion);
@@ -92,6 +95,41 @@ int main()
             recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
 
             send (SockConexion, (char *)&usuario, sizeof(usuario), 0);
+
+
+            } else {
+
+                std::cerr << "Formato de línea incorrecto en el archivo de credenciales: " << linea << std::endl;
+            }
+        }
+
+
+
+    }
+
+    //TRADUCCION
+
+    if(Dato == 1){
+
+        std::ifstream archivo("traduccion.txt");
+
+        std::string linea;
+
+        recv(SockConexion, (char *)&palabra, sizeof (palabra), 0);
+
+        while(std::getline(archivo, linea)){
+            std::istringstream ss(linea);
+            std::string palabraIngles, palabraEspanol;
+
+             if (std::getline(ss, palabraIngles, ':') == palabra){ //solucionar esto no puedo hacer el ==
+
+            std::cout << "La traduccion de: " << palabraIngles << std::endl;
+            std::cout << "Es la palabra: " << palabraEspanol << std::endl;
+
+
+            recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
+
+            send (SockConexion, (char *)&palabraEspanol, sizeof(palabraEspanol), 0);
 
 
             } else {
@@ -137,3 +175,7 @@ int main()
     WSACleanup();
     return 0;
 }
+
+
+
+
