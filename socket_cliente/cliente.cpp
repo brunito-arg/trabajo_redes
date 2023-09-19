@@ -103,12 +103,14 @@ void traduccion(){
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.clear();
 
-/*
+
     std::cout << "Ingresa una palabra en inglés para traducir: ";
     std::cin.getline(palabraIngles, sizeof(palabraIngles));
-*/
 
-     send(Sock, palabraIngles, sizeof(palabraIngles), 0); //PROBLEMA CON EL SEND Y RECV
+    std::cout << "test para ver si guarda la palabra que ingreso: " << palabraIngles <<std::endl;
+
+
+     send(Sock,palabraIngles, strlen(palabraIngles), 0); //PROBLEMA CON EL SEND Y RECV
 
 
      char buffer[256];
