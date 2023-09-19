@@ -162,10 +162,12 @@ int main()
         archivo.seekg(0);
 
          //char palabraIngles[256];
-         std::string palabraIngles;
-         std::string palabraEspanol;
+         char palabraIngles[256];
+         char palabraEspanol[256];
 
-         recv(SockConexion, (char *)&palabraIngles, sizeof(palabraIngles), 0);
+         recv(SockConexion, palabraIngles, sizeof(palabraIngles), 0); //PROBLEMA CON EL RECV Y SEND!
+
+         std::cerr << " test palabra ingles: " << palabraIngles << std::endl;
 
         while(std::getline(archivo, linea)){
                 printf("uwu\n");
@@ -178,10 +180,11 @@ int main()
                 std::cerr << " test palabra esp: " << palabraEsp << std::endl;
 
                 if(palabraIng == palabraIngles){
-                    palabraEspanol = palabraEsp;
+                    strncpy(palabraEspanol, palabraEsp.c_str(), sizeof(palabraEspanol));
+                    palabraEspanol[sizeof(palabraEspanol) - 1] = '\0'; // Añadir terminador nulo
                     traduccionEncontrada = true;
-
                     printf("XD");
+                    std::cerr << " test palabra esp: " << palabraEspanol << std::endl;
 
                     break;
                 }
@@ -194,8 +197,7 @@ int main()
 
         //enviar traduccion al cliente
 
-       send(SockConexion, palabraEspanol.c_str(), palabraEspanol.size(), 0);
-
+       send(SockConexion, palabraEspanol, sizeof(palabraEspanol), 0);
     }
 
 

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <limits>
 
 void initWinSock(WSADATA & WsaData);
 void initSock(SOCKET & Sock);
@@ -94,18 +95,20 @@ void traduccion(){
         connectSock(Sock, DireccionServer);
 
 
-    std::string palabraIngles;
-    std::string palabraEspanol = "pepino";
+    char palabraIngles[256];
+    char palabraEspanol[256];
 
     //char palabraIngles[250];
 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.clear();
 
+/*
     std::cout << "Ingresa una palabra en inglés para traducir: ";
-    std::cin >> palabraIngles;
+    std::cin.getline(palabraIngles, sizeof(palabraIngles));
+*/
 
-
-
-     send(Sock, palabraIngles.c_str(), palabraIngles.size(), 0);
+     send(Sock, palabraIngles, sizeof(palabraIngles), 0); //PROBLEMA CON EL SEND Y RECV
 
 
      char buffer[256];
@@ -115,7 +118,10 @@ void traduccion(){
         std::cerr << "Error al recibir la traduccion o conexion perdida." << std::endl;
     } else {
         buffer[bytesRecibidos] = '\0';
-        std::string palabraEspanol = buffer;
+
+        strncpy(palabraEspanol, buffer, sizeof(palabraEspanol));
+        palabraEspanol[sizeof(palabraEspanol) - 1] = '\0'; // Añadir terminador nulo
+
         std::cout << "Traduccion recibida del servidor: " << palabraEspanol << std::endl;
     }
 
