@@ -148,81 +148,63 @@ int main()
 
 */
 
-    if (Dato == 1){
+    if (Dato == 1) {
+    printf("OwO\n");
 
-        printf("OwO\n");
+    std::ifstream archivo("traduccion.txt");
+    std::string linea;
 
-        std::ifstream archivo ("traduccion.txt");
+    bool traduccionEncontrada = false;
+    char palabraIngles[256];
+    char palabraEspanol[256];
 
-        std::string linea;
+    int bytesRecibidos = recv(SockConexion, palabraIngles, sizeof(palabraIngles), 0);
+    palabraIngles[bytesRecibidos] = '\0';
 
-        bool traduccionEncontrada;
+    std::cerr << " test palabra ingles: " << palabraIngles << std::endl;
 
-        archivo.clear();
-        archivo.seekg(0);
+    while (std::getline(archivo, linea)) {
+        printf("uwu\n");
+        std::size_t pos = linea.find(':');
 
-         //char palabraIngles[256];
-         char palabraIngles[256];
-         char palabraEspanol[256];
+        if (pos != std::string::npos) {
+            char palabraIng[256];
+            strncpy(palabraIng, linea.c_str(), pos); // Copiar la parte anterior al ':' en palabraIng
+            palabraIng[pos] = '\0'; // Añadir terminador nulo
 
-         char palabraIng[256];
+            char palabraEsp[256];
+            strncpy(palabraEsp, linea.c_str() + pos + 1, sizeof(palabraEsp)); // Copiar la parte de la traducción a palabraEsp
 
-         int bytesRecibidos = recv(SockConexion, palabraIngles, sizeof(palabraIngles), 0);
+            printf("U_U\n");
+            std::cerr << " test palabra ing: " << palabraIng << std::endl;
+            std::cerr << " comparacion palabra ing: " << palabraIngles << std::endl;
+            std::cerr << " test palabra esp: " << palabraEsp << std::endl;
 
-         palabraIngles[bytesRecibidos] = '\0';
+            if (strncmp(palabraIng, palabraIngles, sizeof(palabraIngles)) == 0) {
+                strncpy(palabraEspanol, palabraEsp, sizeof(palabraEspanol));
+                palabraEspanol[sizeof(palabraEspanol) - 1] = '\0'; // Añadir terminador nulo
+                traduccionEncontrada = true;
 
-        //palabraIngles = recv(SockConexion, palabraIngles, sizeof(palabraIngles), 0); //PROBLEMA CON EL RECV Y SEND!
+                printf("XD");
+                std::cerr << " test palabra esp: " << palabraEspanol << std::endl;
 
-         std::cerr << " test palabra ingles: " << palabraIngles << std::endl;
+                // send(SockConexion, palabraEspanol, strlen(palabraEspanol), 0);
 
-        while(std::getline(archivo, linea)){
-                printf("uwu\n");
-
-            std::size_t pos = linea.find(':');
-
-            if(pos != std::string::npos){
-
-                char palabraIng[256];
-                strncpy(palabraIng, linea.c_str(), pos); // Copiar la parte anterior al ':' en palabraIng
-                palabraIng[pos] = '\0'; // Añadir terminador nulo
-
-
-                char palabraEsp[256];
-                strncpy(palabraEsp, linea.c_str() + pos + 1, sizeof(palabraEsp)); // Copiar la parte de la traducción a palabraEsp
-
-                printf("U_U\n");
-                std::cerr << " test palabra ing: " << palabraIng << std::endl;
-                  std::cerr << " comparacion palabra ing: " << palabraIngles << std::endl;
-
-
-                std::cerr << " test palabra esp: " << palabraEsp << std::endl;
-
-                if (strncmp(palabraIng, palabraIngles, sizeof(palabraIngles)) == 0) {
-
-                    strncpy(palabraEspanol, palabraEsp, sizeof(palabraEspanol));
-
-                    palabraEspanol[sizeof(palabraEspanol) - 1] = '\0'; // Añadir terminador nulo
-
-                    traduccionEncontrada = true;
-
-                    printf("XD");
-                    std::cerr << " test palabra esp: " << palabraEspanol << std::endl;
-
-                    // send(SockConexion, palabraEspanol, strlen(palabraEspanol), 0);
-
-                    break;
-                }
+                break;
             }
         }
-
-         if (!traduccionEncontrada) {
-//            strcpy(palabraEspanol, "No se encontró traducción.");
-        }
-
-        //enviar traduccion al cliente
-
-       send(SockConexion, palabraEspanol, strlen(palabraEspanol), 0);
     }
+
+    if (!traduccionEncontrada) {
+        // strcpy(palabraEspanol, "No se encontró traducción.");
+    }
+
+    // Convertir palabraEspanol a std::string
+    std::string palabraEspanolStr(palabraEspanol);
+
+    // Enviar traducción al cliente
+    send(SockConexion, palabraEspanolStr.c_str(), palabraEspanolStr.size(), 0);
+}
 
 
 
