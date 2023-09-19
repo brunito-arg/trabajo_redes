@@ -150,6 +150,8 @@ int main()
 
     if (Dato == 1){
 
+        printf("OwO\n");
+
         std::ifstream archivo ("traduccion.txt");
 
         std::string linea;
@@ -166,14 +168,20 @@ int main()
          recv(SockConexion, (char *)&palabraIngles, sizeof(palabraIngles), 0);
 
         while(std::getline(archivo, linea)){
+                printf("uwu\n");
             std::size_t pos = linea.find(':');
             if(pos != std::string::npos){
-                std::string palabraEsp = linea.substr(0, pos);
-                std::string palabraIng = linea.substr(pos + 1);
+                std::string palabraIng = linea.substr(0, pos);
+                std::string palabraEsp = linea.substr(pos + 1);
+                printf("U_U\n");
+                std::cerr << " test palabra ing: " << palabraIng << std::endl;
+                std::cerr << " test palabra esp: " << palabraEsp << std::endl;
 
                 if(palabraIng == palabraIngles){
                     palabraEspanol = palabraEsp;
                     traduccionEncontrada = true;
+
+                    printf("XD");
 
                     break;
                 }
