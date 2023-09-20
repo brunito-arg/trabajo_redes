@@ -12,6 +12,7 @@ void initSockAddr(SOCKADDR_IN & DireccionServer);
 void connectSock(SOCKET & Sock, SOCKADDR_IN & DireccionServer);
 void ingresarUsuario();
 void traduccion();
+void nuevaTraduccion();
 
 int main()
 {
@@ -43,6 +44,7 @@ int main()
 
             case 2:
             std::cout << "nueva traduccion ejecutandose\n";
+            nuevaTraduccion();
             break;
 
             case 3:
@@ -95,8 +97,8 @@ void traduccion(){
         connectSock(Sock, DireccionServer);
 
 
-    char palabraIngles[256];
-    char palabraEspanol[256];
+    char palabraIngles[50];
+    char palabraEspanol[50];
 
     //char palabraIngles[250];
 
@@ -105,12 +107,18 @@ void traduccion(){
 
 
     std::cout << "Ingresa una palabra en inglés para traducir: ";
-    std::cin.getline(palabraIngles, sizeof(palabraIngles));
+    memset(palabraIngles, 0, sizeof(palabraIngles)); // Limpia el buffer
+    std::cin >> palabraIngles; // Ingresa la palabra por teclado
 
     std::cout << "test para ver si guarda la palabra que ingreso: " << palabraIngles <<std::endl;
 
 
-     send(Sock,palabraIngles, strlen(palabraIngles), 0); //PROBLEMA CON EL SEND Y RECV
+    int bytesEnviados = send(Sock, palabraIngles, strlen(palabraIngles), 0);
+        if (bytesEnviados == -1) {
+            std::cerr << "Error al enviar datos al servidor." << std::endl;
+        } else {
+            std::cout << "Se enviaron " << bytesEnviados << " bytes al servidor." << std::endl;
+}
 
 
      char buffer[256];
@@ -129,6 +137,32 @@ void traduccion(){
 
            WSACleanup();
     }
+
+
+void nuevaTraduccion(){
+    WSADATA WsaData;
+    SOCKET Sock;
+    SOCKADDR_IN DireccionServer;
+
+    initWinSock(WsaData);
+    initSock(Sock);
+    initSockAddr(DireccionServer);
+    connectSock(Sock, DireccionServer);
+
+    char palabraTraduccion[50];
+
+    std::cout << "Ingresa una nueva traduccion: ";
+    memset(palabraTraduccion, 0, sizeof(palabraTraduccion)); // Limpia el buffer
+    std::cin >> palabraTraduccion; // Ingresa la palabra por teclado
+
+    std::cout << "verificacion de ingreso de traduccion: " << palabraTraduccion << std::endl;
+
+    send(Sock, (char *) &palabraTraduccion, strlen(palabraTraduccion), 0);
+
+
+    WSACleanup();
+
+}
 
 
 

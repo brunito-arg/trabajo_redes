@@ -155,8 +155,8 @@ int main()
     std::string linea;
 
     bool traduccionEncontrada = false;
-    char palabraIngles[256];
-    char palabraEspanol[256];
+    char palabraIngles[50];
+    char palabraEspanol[50];
 
     int bytesRecibidos = recv(SockConexion, palabraIngles, sizeof(palabraIngles), 0);
     palabraIngles[bytesRecibidos] = '\0';
@@ -168,11 +168,11 @@ int main()
         std::size_t pos = linea.find(':');
 
         if (pos != std::string::npos) {
-            char palabraIng[256];
+            char palabraIng[50];
             strncpy(palabraIng, linea.c_str(), pos); // Copiar la parte anterior al ':' en palabraIng
             palabraIng[pos] = '\0'; // Añadir terminador nulo
 
-            char palabraEsp[256];
+            char palabraEsp[50];
             strncpy(palabraEsp, linea.c_str() + pos + 1, sizeof(palabraEsp)); // Copiar la parte de la traducción a palabraEsp
 
             printf("U_U\n");
@@ -203,8 +203,34 @@ int main()
     std::string palabraEspanolStr(palabraEspanol);
 
     // Enviar traducción al cliente
+    std::cout << "Palabra en español a enviar al cliente: " << palabraEspanol << std::endl;
     send(SockConexion, palabraEspanolStr.c_str(), palabraEspanolStr.size(), 0);
 }
+
+    //NUEVA TRADUCCION
+    if(Dato==2){
+        FILE *puntero;
+        puntero = fopen ("traducciones.txt", "w");
+
+        char palabraTraduccion[50];
+
+        char aux[50];
+        int bytesRecibidos = recv(SockConexion, aux, sizeof(aux), 0);
+
+        if (bytesRecibidos <= 0) {
+            std::cout << "ERROR" << std::endl; //me da este error revisar!
+            } else {
+            aux[bytesRecibidos] = '\0'; // Añadir terminador nulo para convertirlo en una cadena de C válida
+            // Ahora 'aux' contiene los datos recibidos desde el socket
+            }
+
+            std::cout << aux << std::endl;
+
+            //escribe
+            fprintf(puntero, aux);
+
+            fclose(puntero);
+    }
 
 
 
