@@ -282,10 +282,10 @@ void initSockAddr(SOCKADDR_IN &DireccionServer)
     //127.0.0.1 es el local hots, 5000 el puerto
     memset (&DireccionServer, 0, sizeof (DireccionServer));
     DireccionServer.sin_family = AF_INET;
-    DireccionServer.sin_addr.S_un.S_un_b.s_b1 = 127;
-    DireccionServer.sin_addr.S_un.S_un_b.s_b2 = 0;
+    DireccionServer.sin_addr.S_un.S_un_b.s_b1 = 192;
+    DireccionServer.sin_addr.S_un.S_un_b.s_b2 = 168;
     DireccionServer.sin_addr.S_un.S_un_b.s_b3 = 0;
-    DireccionServer.sin_addr.S_un.S_un_b.s_b4 = 1;
+    DireccionServer.sin_addr.S_un.S_un_b.s_b4 = 135;
     DireccionServer.sin_port = 5000;
 }
 void connectSock(SOCKET& Sock, SOCKADDR_IN& DireccionServer)
