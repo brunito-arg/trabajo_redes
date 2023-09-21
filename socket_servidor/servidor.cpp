@@ -148,6 +148,7 @@ int main()
 
 */
 
+/*
     if (Dato == 1) {
     printf("OwO\n");
 
@@ -206,6 +207,66 @@ int main()
     std::cout << "Palabra en español a enviar al cliente: " << palabraEspanol << std::endl;
     send(SockConexion, palabraEspanolStr.c_str(), palabraEspanolStr.size(), 0);
 }
+*/
+
+    if (Dato == 1){
+
+        char buffer[4];
+
+         std::string palabraRecibida;
+       // memset(buffer, 0, sizeof(buffer)); //limpia el buffer
+
+       std::cout << palabraRecibida << std::endl;
+
+
+       std::cout << recv(SockConexion, buffer, sizeof(buffer)-1, 0) << std::endl;
+
+        int bytesRecibidos = recv(SockConexion, buffer, sizeof(buffer)-1, 0);
+
+
+        if (bytesRecibidos <= 0) {
+                std::cerr << "Error al recibir datos o conexión perdida (servidor)." << std::endl;
+        } else {
+                // Copiamos los datos recibidos en la variable std::string
+                palabraRecibida.assign(buffer, bytesRecibidos);
+
+                // Ahora 'palabraRecibida' contiene los datos recibidos del cliente
+                std::cout << "Datos recibidos del cliente: " << palabraRecibida << std::endl;
+}
+
+
+
+        std::ifstream archivo("traduccion.txt");
+        std::string linea;
+
+
+
+
+        std::cout << palabraRecibida << std::endl;
+
+        while (std::getline(archivo, linea)) {
+
+        std::size_t pos = linea.find(':');
+
+            if (pos != std::string::npos){
+
+               std::string palabraIng(linea.c_str(), pos); //copia la parte de la traduccion de la palabra en ingles
+
+               std::string palabraEsp(linea, pos + 1); // Copiar la parte de la traducción a palabraEsp
+
+                if (palabraIng == palabraRecibida){
+
+                    send(SockConexion, palabraEsp.c_str(), palabraEsp.length(), 0);
+                }
+
+
+            }
+
+        }
+
+    }
+
+
 
     //NUEVA TRADUCCION
     if(Dato==2){

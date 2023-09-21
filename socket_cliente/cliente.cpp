@@ -86,6 +86,7 @@ int main()
 }
 
 //TRADUCCION
+/*
 void traduccion(){
     WSADATA WsaData;
     SOCKET Sock;
@@ -137,7 +138,54 @@ void traduccion(){
 
            WSACleanup();
     }
+*/
 
+//TRADUCCION
+void traduccion(){
+    WSADATA WsaData;
+    SOCKET Sock;
+    SOCKADDR_IN DireccionServer;
+
+    initWinSock(WsaData);
+    initSock(Sock);
+    initSockAddr(DireccionServer);
+    connectSock(Sock, DireccionServer);
+
+
+
+    std::string palabraIngles;
+
+    std::cout << "ingrese palabra para buscar la traduccion: ";
+    std::cin >> palabraIngles;
+
+    std::cout << palabraIngles << std::endl;
+
+    send(Sock, palabraIngles.c_str(), palabraIngles.length(), 0);
+
+    std::cout << send(Sock, palabraIngles.c_str(), palabraIngles.length(), 0) << std::endl;
+
+
+    std::string traduccionRecibida;
+
+    char buffer[50];
+
+    int bytesRecibidos = recv(Sock, buffer, sizeof(buffer)-1, 0);
+
+    if (bytesRecibidos <= 0) {
+    std::cerr << "Error al recibir datos o conexión perdida (cliente)" << std::endl;
+
+        } else {
+            // Copiamos los datos recibidos en la variable std::string
+            //traduccionRecibida.assign(buffer, bytesRecibidos);
+             buffer[bytesRecibidos] = '\0';
+            std::string palabraRecibida(buffer);
+
+            // Ahora 'traduccionRecibida' contiene los datos recibidos del servidor
+            std::cout << "Datos recibidos del servidor: " << traduccionRecibida << std::endl;
+}
+
+    WSACleanup();
+}
 
 void nuevaTraduccion(){
     WSADATA WsaData;
