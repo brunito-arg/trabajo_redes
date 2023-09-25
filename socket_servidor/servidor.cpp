@@ -84,32 +84,31 @@ int main()
 
     if(Dato == 4){
 
-        std::ifstream archivo("credenciales.txt");
+        std::string usuario;
+        std::string contrasena;
 
-        std::string linea;
+        char buffer[50];
 
-        while(std::getline(archivo, linea)){
-            std::istringstream ss(linea);
-            std::string usuario, contrasena, rol;
-            int intentos;
+        std::string credencialRecibida(buffer);
 
-             if (std::getline(ss, usuario, '|') && std::getline(ss, contrasena, '|') && std::getline(ss, rol, '|') && (ss >> intentos)){
+        memset(buffer, 0, sizeof(buffer));
 
-            std::cout << "Usuario: " << usuario << std::endl;
-            std::cout << "Contraseña: " << contrasena << std::endl;
+        int bytesRecibidos = recv(SockConexion, buffer, sizeof(buffer), 0);
 
+        if (bytesRecibidos == -1) {
+            // Manejo de error si recv falla
+            std::cerr << "Error al recibir datos del cliente(servidor)" << std::endl;
+        } else {
 
-            recv(SockConexion, (char *)&Dato, sizeof (Dato), 0);
+            std::cout << credencialRecibida << std::endl;
 
-            send (SockConexion, (char *)&usuario, sizeof(usuario), 0);
-
-
-            } else {
-
-                std::cerr << "Formato de línea incorrecto en el archivo de credenciales: " << linea << std::endl;
-            }
+            size_t pos = credencialRecibida.find('|');
+            if (pos != std::string::npos){
+            usuario = credencialRecibida.substr(0,pos);
+            contrasena = credencialRecibida.substr(pos + 1);
         }
 
+    }
 
 
     }
@@ -148,7 +147,7 @@ int main()
 
 */
 
-/*
+
     if (Dato == 1) {
     printf("OwO\n");
 
@@ -207,11 +206,12 @@ int main()
     std::cout << "Palabra en español a enviar al cliente: " << palabraEspanol << std::endl;
     send(SockConexion, palabraEspanolStr.c_str(), palabraEspanolStr.size(), 0);
 }
-*/
 
+
+/*
     if (Dato == 1){
 
-        char buffer[4];
+        char buffer[50];
 
          std::string palabraRecibida;
        // memset(buffer, 0, sizeof(buffer)); //limpia el buffer
@@ -265,7 +265,7 @@ int main()
         }
 
     }
-
+*/
 
 
     //NUEVA TRADUCCION

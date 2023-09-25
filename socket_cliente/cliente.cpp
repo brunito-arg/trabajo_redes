@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <limits>
+#pragma comment(lib, "ws2_32")
 
 void initWinSock(WSADATA & WsaData);
 void initSock(SOCKET & Sock);
@@ -29,10 +30,10 @@ int main()
 
         std::cout << "BIENVENIDO INGRESE UNA OPCION: \n";
 
-         std::cout << "1- Traducir(rol CONSULTA)\n";
+         std::cout << "1- Traducir(rol CONSULTA) test\n";
          std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
          std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
-         std::cout << "4- Ingresar usuario y contraseña (provisorio)\n";
+         std::cout << "4- Ingresar usuario y contraseï¿½a (provisorio)\n";
          std::cout << "5- Cerrar sesion(ambos roles)\n";
          std::cin >> op;
 
@@ -86,7 +87,7 @@ int main()
 }
 
 //TRADUCCION
-/*
+
 void traduccion(){
     WSADATA WsaData;
     SOCKET Sock;
@@ -107,7 +108,7 @@ void traduccion(){
     std::cin.clear();
 
 
-    std::cout << "Ingresa una palabra en inglés para traducir: ";
+    std::cout << "Ingresa una palabra en inglï¿½s para traducir: ";
     memset(palabraIngles, 0, sizeof(palabraIngles)); // Limpia el buffer
     std::cin >> palabraIngles; // Ingresa la palabra por teclado
 
@@ -131,14 +132,16 @@ void traduccion(){
         buffer[bytesRecibidos] = '\0';
 
         strncpy(palabraEspanol, buffer, sizeof(palabraEspanol));
-        palabraEspanol[sizeof(palabraEspanol) - 1] = '\0'; // Añadir terminador nulo
+        palabraEspanol[sizeof(palabraEspanol) - 1] = '\0'; // Aï¿½adir terminador nulo
 
         std::cout << "Traduccion recibida del servidor: " << palabraEspanol << std::endl;
     }
 
            WSACleanup();
     }
-*/
+
+
+/*
 
 //TRADUCCION
 void traduccion(){
@@ -172,7 +175,7 @@ void traduccion(){
     int bytesRecibidos = recv(Sock, buffer, sizeof(buffer)-1, 0);
 
     if (bytesRecibidos <= 0) {
-    std::cerr << "Error al recibir datos o conexión perdida (cliente)" << std::endl;
+    std::cerr << "Error al recibir datos o conexiï¿½n perdida (cliente)" << std::endl;
 
         } else {
             // Copiamos los datos recibidos en la variable std::string
@@ -186,6 +189,8 @@ void traduccion(){
 
     WSACleanup();
 }
+
+*/
 
 void nuevaTraduccion(){
     WSADATA WsaData;
@@ -235,6 +240,8 @@ void ingresarUsuario(){
     printf ("ingrese el usuario: ");
     std::cin >> usuario;
 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     printf ("ingrese la contrasena: ");
     std::cin >> contrasena;
 
@@ -243,12 +250,18 @@ void ingresarUsuario(){
         initSockAddr(DireccionServer);
         connectSock(Sock, DireccionServer);
 
+    std::string credencial = usuario + "|" + contrasena;
 
-     send(Sock,(char *)& usuario,sizeof(usuario),0);
+    send(Sock, credencial.c_str(), credencial.length(), 0);
 
-     send(Sock,(char *)& contrasena,sizeof(contrasena),0);
+ //   memset(buffer, 0, sizeof(buffer))
 
-      WSACleanup();
+
+   //  send(Sock,(char *)& usuario,sizeof(usuario),0);
+
+   //  send(Sock,(char *)& contrasena,sizeof(contrasena),0);
+
+        WSACleanup();
 
 }
 
@@ -267,7 +280,7 @@ void initWinSock(WSADATA &WsaData)
 }
 void initSock(SOCKET &Sock)
 {
-    //creación de socket (en este caso va a escuchar)
+    //creaciï¿½n de socket (en este caso va a escuchar)
     Sock = socket (AF_INET, SOCK_STREAM, 0);
     if (Sock == INVALID_SOCKET)
     {
@@ -282,15 +295,15 @@ void initSockAddr(SOCKADDR_IN &DireccionServer)
     //127.0.0.1 es el local hots, 5000 el puerto
     memset (&DireccionServer, 0, sizeof (DireccionServer));
     DireccionServer.sin_family = AF_INET;
-    DireccionServer.sin_addr.S_un.S_un_b.s_b1 = 192;
-    DireccionServer.sin_addr.S_un.S_un_b.s_b2 = 168;
+    DireccionServer.sin_addr.S_un.S_un_b.s_b1 = 127;
+    DireccionServer.sin_addr.S_un.S_un_b.s_b2 = 0;
     DireccionServer.sin_addr.S_un.S_un_b.s_b3 = 0;
-    DireccionServer.sin_addr.S_un.S_un_b.s_b4 = 135;
+    DireccionServer.sin_addr.S_un.S_un_b.s_b4 = 1;
     DireccionServer.sin_port = 5000;
 }
 void connectSock(SOCKET& Sock, SOCKADDR_IN& DireccionServer)
 {
-    //connect() iniciará un intercambio de paquetes TCP entre ambos equipos, que establecerá la conexión
+    //connect() iniciarï¿½ un intercambio de paquetes TCP entre ambos equipos, que establecerï¿½ la conexiï¿½n
     int iResult = connect(Sock, (SOCKADDR *) & DireccionServer, sizeof (DireccionServer));
 
     if (iResult == SOCKET_ERROR)
