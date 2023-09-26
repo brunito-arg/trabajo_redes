@@ -59,8 +59,46 @@ public:
 
                 cout << "---------Cliente conectado---------" << endl;
         }
+
+        cout << "test server" << endl;
+
+        int dato;
+        recv(client, (char *)&dato, sizeof(dato), 0);
+
+        //traduccion
+        if(dato == 1){
+            std::ifstream archivo("traduccion.txt");
+            std::string linea;
+
+            string palabraRecibida(buffer);
+
+            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+            if(bytesRecibidos == -1){
+                cout << "error al recibir palabra del cliente" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+
+                cout << "datos recibidos: " + datoRecibido <<endl;
+
+                while (std::getline(archivo, linea)){
+                size_t pos = linea.find(':');
+
+                if(pos != string::npos){
+                    string palabraIng = linea.substr(0, pos);
+                    string palabraEsp = linea.substr(pos + 1);
+
+                    if(palabraIng==datoRecibido){
+                        send(client, palabraEsp.c_str(), palabraEsp.length(), 0);
+                    }
+
+                }
+            }
+            }
+
+
+        }
     }
 }
-
 
 };
