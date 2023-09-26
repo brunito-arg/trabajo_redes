@@ -3,10 +3,14 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include "server.cpp"
 
 int main()
 {
-    /* Inicializar WinSock */
+    Server server;
+
+    /*
+
     WSADATA WsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &WsaData);
     if (iResult != NO_ERROR) {
@@ -145,7 +149,7 @@ int main()
         }
     }
 
-*/
+
 
 
     if (Dato == 1) {
@@ -160,6 +164,7 @@ int main()
 
     int bytesRecibidos = recv(SockConexion, palabraIngles, sizeof(palabraIngles), 0);
     palabraIngles[bytesRecibidos] = '\0';
+
 
     std::cerr << " test palabra ingles: " << palabraIngles << std::endl;
 
@@ -265,7 +270,7 @@ int main()
         }
 
     }
-*/
+
 
 
     //NUEVA TRADUCCION
@@ -322,6 +327,8 @@ int main()
 
 
     WSACleanup();
+
+    */
     return 0;
 }
 
