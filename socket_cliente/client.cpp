@@ -119,7 +119,7 @@ public:
         cout << "ingrese palabra para traducir: ";
         cin >> palabraIngles;
 
-        minusculas(palabraIngles);
+        //minusculas(palabraIngles);
 
         cout << "test para ver si guardo la palabra: " + palabraIngles << endl;
 
@@ -149,13 +149,6 @@ public:
         memset(buffer, 0, sizeof(buffer)); // limpio el buffer despues de enviar la traduccion
     }
 
-    string minusculas(string texto){
 
-    for (char &c : texto ){
-        c = tolower(c);
-    }
-
-    return texto;
-}
 
     };

@@ -86,6 +86,8 @@ public:
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
 
+                minusculas(datoRecibido);
+
                 cout << "datos recibidos: " + datoRecibido <<endl;
 
                 while (std::getline(archivo, linea)){
@@ -122,6 +124,8 @@ public:
                 cout << "error al recibir la traduccion del cliente" << endl;
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
+
+                minusculas(datoRecibido);
 
                 regex formato("^[a-zA-Z]+:[a-zA-Z]+$");
 
@@ -272,6 +276,13 @@ string ingles(){
 
     return palabraIng;
 
+}
+
+//PASA A MINUSCULAS
+ void minusculas(string &texto) {
+    for (char &c : texto) {
+        c = tolower(c);
+    }
 }
 
 
