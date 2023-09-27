@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1695753724 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\servidor.cpp
+1695823396 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\servidor.cpp
 	<iostream>
 	<winsock2.h>
 	<fstream>
@@ -7,14 +7,14 @@
 	<string>
 	"server.cpp"
 
-1695759766 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
+1695823681 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
 	<iostream>
 	<winsock2.h>
 	<fstream>
 	<sstream>
 	<string>
 
-1695761923 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
+1695825580 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
 	<iostream>
 	<winsock2.h>
 	<fstream>

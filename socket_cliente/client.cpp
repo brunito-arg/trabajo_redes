@@ -44,6 +44,23 @@ public:
         }else {
             cout << "Conectado al Servidor!" << endl; //si la conexion fue exitosa pasara a confirmar usuario y contrasena
 
+            string usuario, contrasena;
+
+            cout << "ingrese su usuario: ";
+            cin >> usuario;
+
+            //limpio el buffer
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            cout << "ingrese su contrasena: ";
+            cin >> contrasena;
+
+            string credencial = usuario + "|" + contrasena;
+
+            send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
+
+            memset(buffer, 0, sizeof(buffer)); //limpio el buffer
+
             //MENU
             do{
                     int op;

@@ -9,6 +9,8 @@ int main()
 {
     Server server;
 
+
+
     /*
 
     WSADATA WsaData;
@@ -330,7 +332,7 @@ int main()
 
     */
     return 0;
-}
+};
 
 
 

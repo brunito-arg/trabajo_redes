@@ -44,6 +44,8 @@ public:
         cout << "==================================" << endl;
         cout << "========Inicia Servidor===========" << endl;
         cout << "==================================" << endl;
+        credencial();
+
         cout << "Socket creado. Puerto de escucha: " << endl;
 
         //Inicia el servidor y se queda siempre a la escucha
@@ -55,10 +57,15 @@ public:
             /* El código verifica si el valor devuelto por accept es diferente de INVALID_SOCKET.
             Si es diferente, significa que la conexión se ha aceptado correctamente,
             y se muestra un mensaje en la consola que indica que el cliente se ha conectado. */
-            if ((client = accept(server, (SOCKADDR *)&clientAddr, &clientAddrSize)) != INVALID_SOCKET) {
+
+                if ((client = accept(server, (SOCKADDR *)&clientAddr, &clientAddrSize)) != INVALID_SOCKET) {
 
                 cout << "---------Cliente conectado---------" << endl;
-        }
+
+            }
+
+
+
 
         cout << "test server" << endl;
 
@@ -101,4 +108,67 @@ public:
     }
 }
 
+void credencial(){
+
+    std::ifstream archivo("credenciales.txt");
+    std::string linea;
+
+
+        string usuario, contrasena;
+        string credRecibida(buffer);
+        // memset(buffer, 0,sizeof(buffer));
+
+
+        int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+        if(bytesRecibidos == -1){
+                cout << "error al recibir usuario" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+
+                cout << "usuario recibidos: " + datoRecibido <<endl;
+
+                size_t pos = datoRecibido.find('|');
+
+                if(pos != string::npos){
+                    usuario = datoRecibido.substr(0,pos);
+                    contrasena = datoRecibido.substr(pos + 1);
+            }
+
+                while (std::getline(archivo, linea)){
+                    size_t pos = linea.find('|');
+
+                     if(pos != string::npos){
+
+                        string userTxt = linea.substr(0, pos);
+
+                        size_t pos2 = linea.find('|', pos + 1);
+
+                        if (pos2 != string::npos){
+
+                            string contrasenaTxt = linea.substr (pos + 1, pos2 - pos - 1);
+
+
+                            if (usuario==userTxt && contrasena == contrasenaTxt){
+                                cout << "usuario y contrasena correctos" << endl;
+
+                                } else{
+                                cout << "usuario o contrasena incorrectos" << endl;
+
+                        }
+                        }
+
+
+                     }
+                }
+
+        }
+
+}
+
+
+
 };
+
+
+
