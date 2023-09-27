@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1695755430 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\cliente.cpp
+1695827516 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\cliente.cpp
 	<iostream>
 	<windows.h>
 	<winsock.h>
@@ -11,7 +11,7 @@
 
 1694459966 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\main.cpp
 
-1695755264 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
+1695827081 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
 	<iostream>
 	<windows.h>
 	<winsock.h>
@@ -20,7 +20,7 @@
 	<string>
 	<limits>
 
-1695822525 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
+1695827676 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
 	<iostream>
 	<windows.h>
 	<winsock.h>

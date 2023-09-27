@@ -8,9 +8,9 @@
 #pragma comment(lib, "ws2_32")
 #include "client.cpp"
 
-void ingresarUsuario();
-void traduccion();
-void nuevaTraduccion();
+//void ingresarUsuario();
+//void traduccion();
+//void nuevaTraduccion();
 
 int main()
 {

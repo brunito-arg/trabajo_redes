@@ -42,6 +42,7 @@ public:
             WSACleanup();
             return;
         }else {
+            /*
             cout << "Conectado al Servidor!" << endl; //si la conexion fue exitosa pasara a confirmar usuario y contrasena
 
             string usuario, contrasena;
@@ -60,6 +61,7 @@ public:
             send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
 
             memset(buffer, 0, sizeof(buffer)); //limpio el buffer
+            */
 
             //MENU
             do{
@@ -86,7 +88,7 @@ public:
 
             case 2:
             std::cout << "nueva traduccion ejecutandose\n";
-           // nuevaTraduccion();
+            nuevaTraduccion();
             break;
 
             case 3:
@@ -131,6 +133,17 @@ public:
 
             cout << "traduccion: " + palabraTraducida << endl;
         }
+    }
+
+    void nuevaTraduccion(){
+        string traduccionNueva;
+
+        cout << "ingrese nueva traduccion: ";
+        cin >> traduccionNueva;
+
+        send(server, traduccionNueva.c_str(), traduccionNueva.length(), 0);
+
+        memset(buffer, 0, sizeof(buffer)); // limpio el buffer despues de enviar la traduccion
     }
 
     };

@@ -44,8 +44,6 @@ public:
         cout << "==================================" << endl;
         cout << "========Inicia Servidor===========" << endl;
         cout << "==================================" << endl;
-        credencial();
-
         cout << "Socket creado. Puerto de escucha: " << endl;
 
         //Inicia el servidor y se queda siempre a la escucha
@@ -72,7 +70,7 @@ public:
         int dato;
         recv(client, (char *)&dato, sizeof(dato), 0);
 
-        //traduccion
+        //TRADUCCION
         if(dato == 1){
             std::ifstream archivo("traduccion.txt");
             std::string linea;
@@ -105,9 +103,38 @@ public:
 
 
         }
+
+        //NUEVA TRADUCCION
+        if(dato == 2){
+
+            FILE *puntero;
+            puntero = fopen ("traduccion.txt", "a");
+
+            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+             if(bytesRecibidos == -1){
+                cout << "error al recibir la traduccion del cliente" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+
+                cout << "traduccion recibida: " + datoRecibido <<endl;
+
+                fprintf(puntero, "%s\n",  datoRecibido.c_str());
+
+                fclose(puntero);
+            }
+
+        }
+
     }
 }
 
+
+
+
+
+
+//CREDENCIALES TXT
 void credencial(){
 
     std::ifstream archivo("credenciales.txt");
@@ -165,6 +192,9 @@ void credencial(){
         }
 
 }
+
+//BLOQUEAR USUARIO
+
 
 
 
