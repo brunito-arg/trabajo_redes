@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <regex>
+
 
 using namespace std;
 
@@ -95,6 +97,8 @@ public:
 
                     if(palabraIng==datoRecibido){
                         send(client, palabraEsp.c_str(), palabraEsp.length(), 0);
+                    }else{
+                        cout << "No fue posible encontrar la traduccion para: " + datoRecibido << endl;
                     }
 
                 }
@@ -109,6 +113,8 @@ public:
 
             FILE *puntero;
             puntero = fopen ("traduccion.txt", "a");
+            string linea;
+            string palabraIngles;
 
             int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
@@ -117,11 +123,31 @@ public:
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
 
-                cout << "traduccion recibida: " + datoRecibido <<endl;
+                regex formato("^[a-zA-Z]+:[a-zA-Z]+$");
 
-                fprintf(puntero, "%s\n",  datoRecibido.c_str());
+                    if (!regex_match (datoRecibido, formato)){
+                        cout << "No fue posible insertar la traduccion. El formato de insercion debe ser palabraEnInglos:traduccionEnEspaniol" << endl;
+                    }else{
+                            size_t pos = datoRecibido.find(':');
 
-                fclose(puntero);
+                            if(pos != string::npos){
+                                 palabraIngles = datoRecibido.substr(0,pos);
+                            }
+
+                            if(palabraIngles == ingles()){
+                                cout << "ya existe una traduccion para la palabra: " + datoRecibido << endl;
+                            }
+
+
+                    }
+
+                    cout << "traduccion recibida: " + datoRecibido <<endl;
+
+                        fprintf(puntero, "%s\n",  datoRecibido.c_str());
+
+                        fclose(puntero);
+
+
             }
 
         }
@@ -193,7 +219,61 @@ void credencial(){
 
 }
 
-//BLOQUEAR USUARIO
+//TRADUCCION METODO SERVER
+void traduccion(){
+     std::ifstream archivo("traduccion.txt");
+            std::string linea;
+
+            string palabraRecibida(buffer);
+
+            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+            if(bytesRecibidos == -1){
+                cout << "error al recibir palabra del cliente" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+
+                cout << "datos recibidos: " + datoRecibido <<endl;
+
+                while (std::getline(archivo, linea)){
+                size_t pos = linea.find(':');
+
+                if(pos != string::npos){
+                    string palabraIng = linea.substr(0, pos);
+                    string palabraEsp = linea.substr(pos + 1);
+
+                    if(palabraIng==datoRecibido){
+                        send(client, palabraEsp.c_str(), palabraEsp.length(), 0);
+                    }else{
+                        cout << "No fue posible encontrar la traduccion para: " + datoRecibido << endl;
+                    }
+
+                }
+            }
+            }
+
+}
+
+string ingles(){
+
+    std::ifstream archivo("traduccion.txt");
+    std::string linea;
+     string palabraIng;
+
+    while (std::getline(archivo, linea)){
+    size_t pos = linea.find(':');
+
+    if(pos != string::npos){
+        palabraIng = linea.substr(0, pos);
+
+    }
+}
+
+
+    return palabraIng;
+
+}
+
 
 
 
