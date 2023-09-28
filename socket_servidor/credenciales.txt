@@ -1,1 +1,2 @@
-bruno|pepitos123|ADMIN|IntentosFallidos
+bruno|pepitos123|ADMIN|3
+juan|pass|CONSULTA|3

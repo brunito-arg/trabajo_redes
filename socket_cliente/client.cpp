@@ -43,26 +43,8 @@ public:
             WSACleanup();
             return;
         }else {
-            /*
-            cout << "Conectado al Servidor!" << endl; //si la conexion fue exitosa pasara a confirmar usuario y contrasena
 
-            string usuario, contrasena;
-
-            cout << "ingrese su usuario: ";
-            cin >> usuario;
-
-            //limpio el buffer
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-            cout << "ingrese su contrasena: ";
-            cin >> contrasena;
-
-            string credencial = usuario + "|" + contrasena;
-
-            send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
-
-            memset(buffer, 0, sizeof(buffer)); //limpio el buffer
-            */
+            ingresarUsuario();
 
             //MENU
             do{
@@ -94,6 +76,7 @@ public:
 
             case 3:
             std::cout << "usuarios del sistema\n";
+            subMenu();
             break;
 
             case 4:
@@ -148,6 +131,67 @@ public:
 
         memset(buffer, 0, sizeof(buffer)); // limpio el buffer despues de enviar la traduccion
     }
+
+void subMenu(){
+    do{
+        int op;
+            cout << "INGRESE UNA OPCION: \n";
+            cout << "1) ALTA \n";
+            cout << "2) DESBLOQUEO \n";
+            cin >> op;
+            send(server, (char *)&op, sizeof(op), 0);
+
+            switch(op){
+            case 1:
+                cout << "Alta: \n";
+                ingresarUsuario();
+                break;
+            case 2:
+                cout << "Desbloqueo: \n";
+                break;
+            }
+
+
+    }while(1);
+}
+
+void ingresarUsuario(){
+
+            string usuario, contrasena;
+
+            cout << "ingrese su usuario: ";
+            cin >> usuario;
+
+            //limpio el buffer
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            cout << "ingrese su contrasena: ";
+            cin >> contrasena;
+
+            string credencial = usuario + "|" + contrasena;
+
+            send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
+
+            memset(buffer, 0, sizeof(buffer)); //limpio el buffer
+
+}
+
+void altaUsuario(){
+    string usuario, contrasena;
+
+     cout << "ingrese su usuario: ";
+     cin >> usuario;
+
+     //limpio el buffer
+     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+     cout << "ingrese su contrasena: ";
+     cin >> contrasena;
+
+     string credencial;
+
+
+}
 
 
 

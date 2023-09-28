@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include <regex>
+#include <algorithm> // Necesario para trim
+#include <cctype>
 
 
 using namespace std;
@@ -42,7 +44,6 @@ public:
         //Si se recibe más llamadas, las mismas serán rechazadas automáticamente.
         listen(server, 1); // 0 no permite conexiones en espera, 1 vamos a decir que permite 1 cliente en espera
 
-
         cout << "==================================" << endl;
         cout << "========Inicia Servidor===========" << endl;
         cout << "==================================" << endl;
@@ -58,6 +59,7 @@ public:
             Si es diferente, significa que la conexión se ha aceptado correctamente,
             y se muestra un mensaje en la consola que indica que el cliente se ha conectado. */
 
+
                 if ((client = accept(server, (SOCKADDR *)&clientAddr, &clientAddrSize)) != INVALID_SOCKET) {
 
                 cout << "---------Cliente conectado---------" << endl;
@@ -65,7 +67,7 @@ public:
             }
 
 
-
+        credencial();
 
         cout << "test server" << endl;
 
@@ -156,6 +158,34 @@ public:
 
         }
 
+
+        //INGRESAR USUARIO ALTA (POR AHORA)
+        if(dato == 3){
+            int subDato;
+            recv(client, (char *)&subDato, sizeof(subDato), 0);
+
+            if(subDato == 1){
+                FILE *puntero;
+                puntero = fopen ("credenciales.txt", "a");
+                string linea;
+
+                int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+                 if(bytesRecibidos == -1){
+                cout << "error al recibir la traduccion del cliente" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+                cout << "nuevo usario recibido: " + datoRecibido << endl;
+
+                fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
+
+                fclose(puntero);
+            }
+        }
+
+
+        }
+
     }
 }
 
@@ -189,10 +219,13 @@ void credencial(){
 
                 if(pos != string::npos){
                     usuario = datoRecibido.substr(0,pos);
+                    cout << usuario <<endl;
                     contrasena = datoRecibido.substr(pos + 1);
+                    cout << contrasena << endl;
             }
 
                 while (std::getline(archivo, linea)){
+                    trim(linea);
                     size_t pos = linea.find('|');
 
                      if(pos != string::npos){
@@ -211,6 +244,8 @@ void credencial(){
 
                                 } else{
                                 cout << "usuario o contrasena incorrectos" << endl;
+                                cout << userTxt << endl;
+                                cout << contrasenaTxt << endl;
 
                         }
                         }
@@ -283,6 +318,15 @@ string ingles(){
     for (char &c : texto) {
         c = tolower(c);
     }
+}
+
+void trim(string& str) {
+    str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](int ch) {
+        return !std::isspace(ch);
+    }));
+    str.erase(std::find_if(str.rbegin(), str.rend(), [](int ch) {
+        return !std::isspace(ch);
+    }).base(), str.end());
 }
 
 

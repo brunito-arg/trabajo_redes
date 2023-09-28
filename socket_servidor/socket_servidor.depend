@@ -14,11 +14,13 @@
 	<sstream>
 	<string>
 
-1695856052 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
+1695932421 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
 	<iostream>
 	<winsock2.h>
 	<fstream>
 	<sstream>
 	<string>
 	<regex>
+	<algorithm>
+	<cctype>
 
