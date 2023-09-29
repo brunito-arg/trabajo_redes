@@ -187,7 +187,7 @@ public:
         }
 
     }
-}
+} //aqui termina SERVER
 
 
 
@@ -222,10 +222,12 @@ void credencial(){
                     cout << usuario <<endl;
                     contrasena = datoRecibido.substr(pos + 1);
                     cout << contrasena << endl;
-            }
+
+                    bool credencialesCorrectas = false; //bandera que verifica si se encontro el usuario
+
 
                 while (std::getline(archivo, linea)){
-                    trim(linea);
+                  //  trim(linea);
                     size_t pos = linea.find('|');
 
                      if(pos != string::npos){
@@ -241,21 +243,24 @@ void credencial(){
 
                             if (usuario==userTxt && contrasena == contrasenaTxt){
                                 cout << "usuario y contrasena correctos" << endl;
+                                credencialesCorrectas = true;
+                                break;
 
-                                } else{
-                                cout << "usuario o contrasena incorrectos" << endl;
-                                cout << userTxt << endl;
-                                cout << contrasenaTxt << endl;
-
-                        }
+                                }
                         }
 
 
                      }
                 }
 
-        }
+                if(!credencialesCorrectas){
+                    cout << "usuario o contrasena incorrectas" << endl;
+                }
 
+}
+
+
+}
 }
 
 //TRADUCCION METODO SERVER
@@ -334,6 +339,10 @@ void trim(string& str) {
 
 
 };
+
+
+
+
 
 
 

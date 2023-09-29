@@ -1,2 +1,3 @@
 bruno|pepitos123|ADMIN|3
-juan|pass|CONSULTA|3
+
+juan|pass|CONSULTA|3 

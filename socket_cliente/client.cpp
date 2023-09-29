@@ -46,51 +46,9 @@ public:
 
             ingresarUsuario();
 
-            //MENU
-            do{
-                    int op;
+            menu();
 
 
-                    std::cout << "BIENVENIDO INGRESE UNA OPCION: \n";
-
-                    std::cout << "1- Traducir(rol CONSULTA) test\n";
-                    std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
-                    std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
-                    std::cout << "4- Ingresar usuario y contrasena (provisorio)\n";
-                    std::cout << "5- Cerrar sesion(ambos roles)\n";
-                    std::cin >> op;
-
-                    send(server, (char *)&op, sizeof(op), 0);
-
-
-         switch(op){
-            case 1:
-            std::cout << "traduccion\n";
-           traduccion();
-            break;
-
-            case 2:
-            std::cout << "nueva traduccion ejecutandose\n";
-            nuevaTraduccion();
-            break;
-
-            case 3:
-            std::cout << "usuarios del sistema\n";
-            subMenu();
-            break;
-
-            case 4:
-           // ingresarUsuario();
-            break;
-
-            case 5:
-            std::cout << "se cerro la sesion\n";
-            break;
-
-         }
-
-
-            } while(1);
 
         }
     }
@@ -135,9 +93,11 @@ public:
 void subMenu(){
     do{
         int op;
+        string salida;
             cout << "INGRESE UNA OPCION: \n";
             cout << "1) ALTA \n";
             cout << "2) DESBLOQUEO \n";
+            cout << "3) SALIR AL MENU ANTERIOR \n";
             cin >> op;
             send(server, (char *)&op, sizeof(op), 0);
 
@@ -149,6 +109,13 @@ void subMenu(){
             case 2:
                 cout << "Desbloqueo: \n";
                 break;
+            case 3:
+                cout << "escriba /salir para ir al menu anterior: ";
+                cin >> salida;
+
+                if(salida == "/salir"){
+                    menu();
+                }
             }
 
 
@@ -191,6 +158,54 @@ void altaUsuario(){
      string credencial;
 
 
+}
+
+void menu(){
+    //MENU
+    do{
+        int op;
+
+
+        std::cout << "BIENVENIDO INGRESE UNA OPCION: \n";
+
+        std::cout << "1- Traducir(rol CONSULTA) test\n";
+        std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
+        std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
+        std::cout << "4- Ingresar usuario y contrasena (provisorio)\n";
+        std::cout << "5- Cerrar sesion(ambos roles)\n";
+        std::cin >> op;
+
+        send(server, (char *)&op, sizeof(op), 0);
+
+
+         switch(op){
+            case 1:
+            std::cout << "traduccion\n";
+           traduccion();
+            break;
+
+            case 2:
+            std::cout << "nueva traduccion ejecutandose\n";
+            nuevaTraduccion();
+            break;
+
+            case 3:
+            std::cout << "usuarios del sistema\n";
+            subMenu();
+            break;
+
+            case 4:
+           // ingresarUsuario();
+            break;
+
+            case 5:
+            std::cout << "se cerro la sesion\n";
+            break;
+
+         }
+
+
+            } while(1);
 }
 
 
