@@ -66,7 +66,6 @@ public:
 
             }
 
-
         credencial();
 
         cout << "test server" << endl;
@@ -182,6 +181,27 @@ public:
                 fclose(puntero);
             }
         }
+
+
+        }
+
+        //CERRAR SESION
+        if(dato==5){
+
+            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+            if(bytesRecibidos == -1){
+                cout << "error al recibir la salida" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+                if(datoRecibido == "cerrar"){
+                    closesocket(server);
+                    cout << "se cerro la conexion" << endl;
+                    break;
+                }
+            }
+
+
 
 
         }

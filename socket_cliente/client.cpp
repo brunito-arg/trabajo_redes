@@ -160,6 +160,22 @@ void altaUsuario(){
 
 }
 
+//CERRAR SESION
+void cerrarSesion(){
+     string salida;
+
+     cout << "ingrese 'cerrar' para salir: ";
+     cin >> salida;
+
+    send (server, salida.c_str(), salida.length(), 0);
+    memset(buffer, 0, sizeof(buffer)); //limpio el buffer
+
+    //FALTA PONER UN MENSAJE QUE RECIBA DEL SERVER QUE SE CERRO LA CONEXION
+
+
+
+}
+
 void menu(){
     //MENU
     do{
@@ -173,6 +189,7 @@ void menu(){
         std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
         std::cout << "4- Ingresar usuario y contrasena (provisorio)\n";
         std::cout << "5- Cerrar sesion(ambos roles)\n";
+        //std::cout << "6- Cerrar sesion(ambos roles)\n";
         std::cin >> op;
 
         send(server, (char *)&op, sizeof(op), 0);
@@ -199,7 +216,7 @@ void menu(){
             break;
 
             case 5:
-            std::cout << "se cerro la sesion\n";
+            cerrarSesion();
             break;
 
          }
@@ -207,6 +224,8 @@ void menu(){
 
             } while(1);
 }
+
+
 
 
 
