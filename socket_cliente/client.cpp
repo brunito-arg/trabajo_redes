@@ -46,7 +46,24 @@ public:
 
             ingresarUsuario();
 
-            menu();
+            int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
+
+            if (bytesRecibidos == -1){
+                cout << "error al recibir rol" << endl;
+            } else {
+                string rol(buffer, bytesRecibidos);
+
+            cout << "ROL: " + rol << endl;
+
+            if(rol == "admin"){
+                menuAdmin();
+            }else{
+                menu();
+            }
+        }
+
+
+
 
 
 
@@ -104,7 +121,7 @@ void subMenu(){
             switch(op){
             case 1:
                 cout << "Alta: \n";
-                ingresarUsuario();
+                altaUsuario();
                 break;
             case 2:
                 cout << "Desbloqueo: \n";
@@ -144,18 +161,24 @@ void ingresarUsuario(){
 }
 
 void altaUsuario(){
-    string usuario, contrasena;
+            string usuario, contrasena;
 
-     cout << "ingrese su usuario: ";
-     cin >> usuario;
+            cout << "ingrese su usuario: ";
+            cin >> usuario;
 
-     //limpio el buffer
-     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            //limpio el buffer
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-     cout << "ingrese su contrasena: ";
-     cin >> contrasena;
+            cout << "ingrese su contrasena: ";
+            cin >> contrasena;
 
-     string credencial;
+            string credencial = usuario + "|" + contrasena;
+         //   string contra = contra;
+
+            send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
+          //  send (server, contra.c_str(), contra.length(), 0); //envio el user al server
+
+            memset(buffer, 0, sizeof(buffer)); //limpio el buffer
 
 
 }
@@ -174,6 +197,46 @@ void cerrarSesion(){
 
 
 
+}
+
+void menuAdmin(){
+    do{
+        int op;
+
+        cout << "MENU DEL ADMINISTRADOR \n";
+
+        cout << "1- Nueva Traduccion(rol ADMIN)\n";
+        cout << "2- Usuarios(rol ADMIN) me flata subopciones aca\n";
+        cout << "3- Ver registro de actividades(rol ADMIN)\n";
+        cout << "4- Cerrar sesion(ambos roles)\n";
+        std::cin >> op;
+
+        send(server, (char *)&op, sizeof(op), 0);
+
+        switch(op){
+
+            case 1:
+            std::cout << "nueva traduccion ejecutandose\n";
+            nuevaTraduccion();
+            break;
+
+            case 2:
+            std::cout << "usuarios del sistema\n";
+            subMenu();
+            break;
+
+            case 3:
+           // ingresarUsuario();
+            break;
+
+            case 4:
+            cerrarSesion();
+            break;
+
+         }
+
+
+    }while(1);
 }
 
 void menu(){

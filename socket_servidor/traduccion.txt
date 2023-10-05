@@ -3,4 +3,6 @@ dog:perro
 cat:gato
 
 
-university-universidad
+
+
+university:universidad

@@ -122,7 +122,7 @@ public:
             int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
              if(bytesRecibidos == -1){
-                cout << "error al recibir la traduccion del cliente" << endl;
+                cout << "error al recibir la traduccion del cliente pepo" << endl;
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
 
@@ -131,7 +131,7 @@ public:
                 regex formato("^[a-zA-Z]+:[a-zA-Z]+$");
 
                     if (!regex_match (datoRecibido, formato)){
-                        cout << "No fue posible insertar la traduccion. El formato de insercion debe ser palabraEnInglos:traduccionEnEspaniol" << endl;
+                        cout << "No fue posible insertar la traduccion. El formato de insercion debe ser palabraEnIngles:traduccionEnEspaniol" << endl;
                     }else{
                             size_t pos = datoRecibido.find(':');
 
@@ -143,14 +143,15 @@ public:
                                 cout << "ya existe una traduccion para la palabra: " + datoRecibido << endl;
                             }
 
+                            cout << "Nueva traduccion recibida: " + datoRecibido <<endl;
+
+                            fprintf(puntero, "%s\n",  datoRecibido.c_str());
+
+                            fclose(puntero);
+
 
                     }
 
-                    cout << "traduccion recibida: " + datoRecibido <<endl;
-
-                        fprintf(puntero, "%s\n",  datoRecibido.c_str());
-
-                        fclose(puntero);
 
 
             }
@@ -176,7 +177,12 @@ public:
                 string datoRecibido(buffer, bytesRecibidos);
                 cout << "nuevo usario recibido: " + datoRecibido << endl;
 
-                fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
+                //verifica si la contraseña esta vacia
+                if(!datoRecibido.empty()){
+                    fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
+                } else {
+                    cout << "No se pudo guardar el usuario ya que la contrasena esta vacia" << endl;
+                }
 
                 fclose(puntero);
             }
@@ -262,7 +268,7 @@ void credencial(){
 
 
                             if (usuario==userTxt && contrasena == contrasenaTxt){
-                                cout << "usuario y contrasena correctos" << endl;
+                                cout << "datos de usuario incorrectos" << endl;
                                 credencialesCorrectas = true;
                                 break;
 
@@ -278,7 +284,7 @@ void credencial(){
                 }
 
 }
-
+                 send(client, usuario.c_str(), usuario.length(), 0);
 
 }
 }
