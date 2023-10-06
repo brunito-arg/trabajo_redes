@@ -204,7 +204,13 @@ public:
 
                 fclose(puntero);
             }
+        }else{
+            if(subDato==2){
+                cout << "XD" << endl;
+            }
         }
+
+
 
 
         }
