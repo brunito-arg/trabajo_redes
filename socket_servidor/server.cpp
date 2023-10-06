@@ -172,14 +172,32 @@ public:
                 int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
                  if(bytesRecibidos == -1){
-                cout << "error al recibir la traduccion del cliente" << endl;
+                cout << "error al recibir datos del cliente" << endl;
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
+
                 cout << "nuevo usario recibido: " + datoRecibido << endl;
 
                 //verifica si la contraseña esta vacia
-                if(!datoRecibido.empty()){
-                    fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
+                if (!datoRecibido.empty()) {
+                // Divide el dato recibido en usuario y contraseña
+                    size_t pos = datoRecibido.find("|");
+                    if (pos != string::npos) {
+
+                    string usuario = datoRecibido.substr(0, pos);
+                    string contrasena = datoRecibido.substr(pos + 1);
+
+                    // Verifica si el usuario es "admin" y no permite su escritura
+                        if (usuario != "admin") {
+
+                        fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
+                        cout << "Nuevo usuario recibido: " + datoRecibido << endl;
+                        } else {
+                            cout << "No se pudo guardar el usuario 'admin'" << endl;
+                        }
+                    } else {
+                            cout << "Dato recibido no válido: " + datoRecibido << endl;
+                        }
                 } else {
                     cout << "No se pudo guardar el usuario ya que la contrasena esta vacia" << endl;
                 }

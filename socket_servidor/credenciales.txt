@@ -5,3 +5,5 @@ juan|pass|CONSULTA|3
 admin|ryc@UNLa.2023|ADMIN|3 
 
 carlos|abc123|CONSULTA|3 
+romina|romualda|CONSULTA|3 
+ 

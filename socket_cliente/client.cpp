@@ -216,16 +216,17 @@ void menuAdmin(){
         switch(op){
 
             case 1:
-            std::cout << "nueva traduccion ejecutandose\n";
+            std::cout << "Nueva traduccion\n";
             nuevaTraduccion();
             break;
 
             case 2:
-            std::cout << "usuarios del sistema\n";
+            std::cout << "Usuarios del sistema\n";
             subMenu();
             break;
 
             case 3:
+            cout << "Ver registro de actividades\n";
            // ingresarUsuario();
             break;
 
