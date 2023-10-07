@@ -178,10 +178,8 @@ public:
 
                 cout << "nuevo usario recibido: " + datoRecibido << endl;
 
-                //verifica si la contraseña esta vacia
-                if (!datoRecibido.empty()) {
                 // Divide el dato recibido en usuario y contraseña
-                    size_t pos = datoRecibido.find("|");
+                    size_t pos = datoRecibido.find('|');
                     if (pos != string::npos) {
 
                     string usuario = datoRecibido.substr(0, pos);
@@ -190,17 +188,18 @@ public:
                     // Verifica si el usuario es "admin" y no permite su escritura
                         if (usuario != "admin") {
 
-                        fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
-                        cout << "Nuevo usuario recibido: " + datoRecibido << endl;
+                                if(!contrasena.empty()){
+                                    fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
+                                    cout << "Nuevo usuario recibido: " + datoRecibido << endl;
+                                }else{
+                                    cout << "NO se puede ingrear un usuario con la contrasena vacia" << endl;                                }
                         } else {
                             cout << "No se pudo guardar el usuario 'admin'" << endl;
                         }
                     } else {
                             cout << "Dato recibido no válido: " + datoRecibido << endl;
                         }
-                } else {
-                    cout << "No se pudo guardar el usuario ya que la contrasena esta vacia" << endl;
-                }
+
 
                 fclose(puntero);
             }

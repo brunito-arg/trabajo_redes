@@ -121,7 +121,7 @@ void subMenu(){
             switch(op){
             case 1:
                 cout << "Alta: \n";
-                altaUsuario();
+                ingresarUsuario();
                 break;
             case 2:
                 cout << "Desbloqueo: \n";
@@ -150,7 +150,8 @@ void ingresarUsuario(){
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             cout << "ingrese su contrasena: ";
-            cin >> contrasena;
+            cin.ignore(); //ignora el salto de linea
+            getline(cin, contrasena);
 
             string credencial = usuario + "|" + contrasena;
 
@@ -286,7 +287,7 @@ void menu(){
          }
 
 
-            } while(1);
+            } while(true);
 }
 
 
