@@ -150,37 +150,16 @@ void ingresarUsuario(){
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             cout << "ingrese su contrasena: ";
-            cin.ignore(); //ignora el salto de linea
             getline(cin, contrasena);
+            cin.ignore(); //ignora el salto de linea mmm bueno soluciono error de que me comia una letra pero debo ingresar dos veces enter
+
+            cout << contrasena << endl;
 
             string credencial = usuario + "|" + contrasena;
 
             send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
 
             memset(buffer, 0, sizeof(buffer)); //limpio el buffer
-
-}
-
-void altaUsuario(){
-            string usuario, contrasena;
-
-            cout << "ingrese su usuario: ";
-            cin >> usuario;
-
-            //limpio el buffer
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-            cout << "ingrese su contrasena: ";
-            cin >> contrasena;
-
-            string credencial = usuario + "|" + contrasena;
-         //   string contra = contra;
-
-            send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
-          //  send (server, contra.c_str(), contra.length(), 0); //envio el user al server
-
-            memset(buffer, 0, sizeof(buffer)); //limpio el buffer
-
 
 }
 
@@ -194,6 +173,7 @@ void cerrarSesion(){
     send (server, salida.c_str(), salida.length(), 0);
     memset(buffer, 0, sizeof(buffer)); //limpio el buffer
 
+
     //FALTA PONER UN MENSAJE QUE RECIBA DEL SERVER QUE SE CERRO LA CONEXION
 
 
@@ -202,36 +182,36 @@ void cerrarSesion(){
 
 void menuAdmin(){
     do{
-        int op;
+        int option;
 
         cout << "MENU DEL ADMINISTRADOR \n";
 
-        cout << "1- Nueva Traduccion(rol ADMIN)\n";
-        cout << "2- Usuarios(rol ADMIN) me flata subopciones aca\n";
-        cout << "3- Ver registro de actividades(rol ADMIN)\n";
-        cout << "4- Cerrar sesion(ambos roles)\n";
-        std::cin >> op;
+        cout << "2- Nueva Traduccion(rol ADMIN)\n";
+        cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
+        cout << "4- Ver registro de actividades(rol ADMIN)\n";
+        cout << "5- Cerrar sesion(ambos roles)\n";
+        std::cin >> option;
 
-        send(server, (char *)&op, sizeof(op), 0);
+        send(server, (char *)&option, sizeof(option), 0);
 
-        switch(op){
+        switch(option){
 
-            case 1:
+            case 2:
             std::cout << "Nueva traduccion\n";
             nuevaTraduccion();
             break;
 
-            case 2:
+            case 3:
             std::cout << "Usuarios del sistema\n";
             subMenu();
             break;
 
-            case 3:
+            case 4:
             cout << "Ver registro de actividades\n";
            // ingresarUsuario();
             break;
 
-            case 4:
+            case 5:
             cerrarSesion();
             break;
 
@@ -250,9 +230,9 @@ void menu(){
         std::cout << "BIENVENIDO INGRESE UNA OPCION: \n";
 
         std::cout << "1- Traducir(rol CONSULTA) test\n";
-        std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
-        std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
-        std::cout << "4- Ingresar usuario y contrasena (provisorio)\n";
+       // std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
+       // std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
+       // std::cout << "4- Ingresar usuario y contrasena (provisorio)\n";
         std::cout << "5- Cerrar sesion(ambos roles)\n";
         //std::cout << "6- Cerrar sesion(ambos roles)\n";
         std::cin >> op;
@@ -266,19 +246,19 @@ void menu(){
            traduccion();
             break;
 
-            case 2:
-            std::cout << "nueva traduccion ejecutandose\n";
-            nuevaTraduccion();
-            break;
+           // case 2:
+            //std::cout << "nueva traduccion ejecutandose\n";
+            //nuevaTraduccion();
+            //break;
 
-            case 3:
-            std::cout << "usuarios del sistema\n";
-            subMenu();
-            break;
+            //case 3:
+            //std::cout << "usuarios del sistema\n";
+            //subMenu();
+            //break;
 
-            case 4:
+            //case 4:
            // ingresarUsuario();
-            break;
+            //break;
 
             case 5:
             cerrarSesion();
