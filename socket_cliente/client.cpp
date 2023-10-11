@@ -6,6 +6,7 @@
 #include <string>
 #include <limits>
 #include <cctype>
+#include <ctime>
 #pragma comment(lib, "ws2_32")
 
 using namespace std;
@@ -165,18 +166,12 @@ void ingresarUsuario(){
 
 //CERRAR SESION
 void cerrarSesion(){
-     string salida;
-
-     cout << "ingrese 'cerrar' para salir: ";
-     cin >> salida;
-
-    send (server, salida.c_str(), salida.length(), 0);
-    memset(buffer, 0, sizeof(buffer)); //limpio el buffer
-
-
     //FALTA PONER UN MENSAJE QUE RECIBA DEL SERVER QUE SE CERRO LA CONEXION
 
+    closesocket(server);
 
+    WSACleanup();
+    exit(0);
 
 }
 
@@ -233,7 +228,7 @@ void menu(){
        // std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
        // std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
        // std::cout << "4- Ingresar usuario y contrasena (provisorio)\n";
-        std::cout << "5- Cerrar sesion(ambos roles)\n";
+        std::cout << "0- Cerrar sesion(ambos roles)\n";
         //std::cout << "6- Cerrar sesion(ambos roles)\n";
         std::cin >> op;
 
@@ -260,7 +255,7 @@ void menu(){
            // ingresarUsuario();
             //break;
 
-            case 5:
+            case 0:
             cerrarSesion();
             break;
 
@@ -268,6 +263,25 @@ void menu(){
 
 
             } while(true);
+}
+
+void logEvent(const std::string& message) {
+    std::ofstream logFile("server.log", std::ios::app);  // Abre el archivo en modo de apertura para agregar
+
+    if (logFile.is_open()) {
+        // Obtiene la fecha y hora actual
+        std::time_t currentTime = std::time(nullptr);
+        std::tm* timeInfo = std::localtime(&currentTime);
+        char timeBuffer[80];
+        std::strftime(timeBuffer, sizeof(timeBuffer), "[%Y-%m-%d %H:%M:%S] ", timeInfo);
+
+        // Escribe el registro en el archivo
+        logFile << timeBuffer << message << "\n";
+
+        logFile.close();  // Cierra el archivo
+    } else {
+        std::cerr << "Error: No se pudo abrir el archivo de registro 'server.log'.\n";
+    }
 }
 
 

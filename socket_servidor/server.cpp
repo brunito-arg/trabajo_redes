@@ -53,26 +53,29 @@ public:
         while(true){
             int clientAddrSize = sizeof(clientAddr);
 
-            // La función accept() espera la llegada de conexiones.
-            // La llamada a esta función no retornará hasta que se reciba una llamada entrante.
-            /* El código verifica si el valor devuelto por accept es diferente de INVALID_SOCKET.
-            Si es diferente, significa que la conexión se ha aceptado correctamente,
-            y se muestra un mensaje en la consola que indica que el cliente se ha conectado. */
-
-
                 if ((client = accept(server, (SOCKADDR *)&clientAddr, &clientAddrSize)) != INVALID_SOCKET) {
 
                 cout << "---------Cliente conectado---------" << endl;
 
+                menuConexion();
+
+
+            }
+            }
             }
 
-        credencial();
+         void menuConexion(){
 
-        cout << "test server" << endl;
+        bool validado = credencial();
+        bool verificar = true;
+
+        if(validado == true){
+            cout << "test server" << endl;
 
         int dato;
         recv(client, (char *)&dato, sizeof(dato), 0);
 
+        while(verificar){
         //TRADUCCION
         if(dato == 1){
             std::ifstream archivo("traduccion.txt");
@@ -100,6 +103,7 @@ public:
 
                     if(palabraIng==datoRecibido){
                         send(client, palabraEsp.c_str(), palabraEsp.length(), 0);
+                        cout << datoRecibido << endl;
                     }else{
                         cout << "No fue posible encontrar la traduccion para: " + datoRecibido << endl;
                     }
@@ -110,8 +114,37 @@ public:
 
 
         }
+            if(dato==0){
+
+            verificar = false;
+
+            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+            if(bytesRecibidos == -1){
+                cout << "error al recibir la salida" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+                if(datoRecibido == "cerrar"){
+                    closesocket(client);
+                    cout << "se cerro la conexion" << endl;
+                    break;
+                }
+            }
+
+
+
+
+        }
+
+        }
+        }else{
+            menuConexion();
+        }
+
+
 
         //NUEVA TRADUCCION
+        /*
         if(dato == 2){
 
             FILE *puntero;
@@ -213,30 +246,14 @@ public:
 
 
         }
+        */
 
         //CERRAR SESION
-        if(dato==5){
-
-            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
-
-            if(bytesRecibidos == -1){
-                cout << "error al recibir la salida" << endl;
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
-                if(datoRecibido == "cerrar"){
-                    closesocket(server);
-                    cout << "se cerro la conexion" << endl;
-                    break;
-                }
-            }
 
 
+}
 
-
-        }
-
-    }
-} //aqui termina SERVER
+ //aqui termina SERVER
 
 
 
@@ -244,7 +261,7 @@ public:
 
 
 //CREDENCIALES TXT
-void credencial(){
+boolean credencial(){
 
     std::ifstream archivo("credenciales.txt");
     std::string linea;
@@ -252,6 +269,7 @@ void credencial(){
 
         string usuario, contrasena;
         string credRecibida(buffer);
+        bool credencialesCorrectas = false;
         // memset(buffer, 0,sizeof(buffer));
 
 
@@ -259,6 +277,7 @@ void credencial(){
 
         if(bytesRecibidos == -1){
                 cout << "error al recibir usuario" << endl;
+                credencial();
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
 
@@ -272,7 +291,7 @@ void credencial(){
                     contrasena = datoRecibido.substr(pos + 1);
                     cout << contrasena << endl;
 
-                    bool credencialesCorrectas = false; //bandera que verifica si se encontro el usuario
+                     //bandera que verifica si se encontro el usuario
 
 
                 while (std::getline(archivo, linea)){
@@ -310,6 +329,8 @@ void credencial(){
                  send(client, usuario.c_str(), usuario.length(), 0);
 
 }
+
+    return credencialesCorrectas;
 }
 
 //TRADUCCION METODO SERVER

@@ -20,7 +20,7 @@
 	<string>
 	<limits>
 
-1696798559 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
+1697034034 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
 	<iostream>
 	<windows.h>
 	<winsock.h>
@@ -29,4 +29,5 @@
 	<string>
 	<limits>
 	<cctype>
+	<ctime>
 

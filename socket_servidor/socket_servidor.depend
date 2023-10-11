@@ -7,7 +7,7 @@
 	<string>
 	"server.cpp"
 
-1695998865 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
+1697035248 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
 	<iostream>
 	<winsock2.h>
 	<fstream>
@@ -17,7 +17,7 @@
 	<algorithm>
 	<cctype>
 
-1696709317 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
+1697037411 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_servidor\server.cpp
 	<iostream>
 	<winsock2.h>
 	<fstream>
