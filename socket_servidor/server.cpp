@@ -78,43 +78,11 @@ public:
         while(verificar){
         //TRADUCCION
         if(dato == 1){
-            std::ifstream archivo("traduccion.txt");
-            std::string linea;
-
-            string palabraRecibida(buffer);
-
-            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
-
-            if(bytesRecibidos == -1){
-                cout << "error al recibir palabra del cliente" << endl;
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
-
-                minusculas(datoRecibido);
-
-                cout << "datos recibidos: " + datoRecibido <<endl;
-
-                while (std::getline(archivo, linea)){
-                size_t pos = linea.find(':');
-
-                if(pos != string::npos){
-                    string palabraIng = linea.substr(0, pos);
-                    string palabraEsp = linea.substr(pos + 1);
-
-                    if(palabraIng==datoRecibido){
-                        send(client, palabraEsp.c_str(), palabraEsp.length(), 0);
-                        cout << datoRecibido << endl;
-                    }else{
-                        cout << "No fue posible encontrar la traduccion para: " + datoRecibido << endl;
-                    }
-
-                }
-            }
-            }
-
+            traduccion();
 
         }
-            if(dato==0){
+
+        if(dato==0){
 
             verificar = false;
 
@@ -124,19 +92,18 @@ public:
                 cout << "error al recibir la salida" << endl;
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
-                if(datoRecibido == "cerrar"){
-                    closesocket(client);
-                    cout << "se cerro la conexion" << endl;
-                    break;
-                }
+            if(datoRecibido == "cerrar"){
+                closesocket(client);
+                cout << "se cerro la conexion" << endl;
+               break;
             }
-
-
+        }
 
 
         }
 
         }
+
         }else{
             menuConexion();
         }
@@ -335,38 +302,71 @@ boolean credencial(){
 
 //TRADUCCION METODO SERVER
 void traduccion(){
-     std::ifstream archivo("traduccion.txt");
-            std::string linea;
+        std::ifstream archivo("traduccion.txt");
+        std::string linea;
+        bool traduccionEncontrada = false;
 
-            string palabraRecibida(buffer);
+        string palabraRecibida(buffer);
 
-            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+        int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
-            if(bytesRecibidos == -1){
-                cout << "error al recibir palabra del cliente" << endl;
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
+        if(bytesRecibidos == -1){
+            cout << "error al recibir palabra del cliente" << endl;
+        }else{
+            string datoRecibido(buffer, bytesRecibidos);
 
-                cout << "datos recibidos: " + datoRecibido <<endl;
+            minusculas(datoRecibido);
 
-                while (std::getline(archivo, linea)){
-                size_t pos = linea.find(':');
+            cout << "datos recibidos: " + datoRecibido <<endl;
 
-                if(pos != string::npos){
-                    string palabraIng = linea.substr(0, pos);
-                    string palabraEsp = linea.substr(pos + 1);
+            while (std::getline(archivo, linea)){
+            size_t pos = linea.find(':');
 
-                    if(palabraIng==datoRecibido){
-                        send(client, palabraEsp.c_str(), palabraEsp.length(), 0);
-                    }else{
-                        cout << "No fue posible encontrar la traduccion para: " + datoRecibido << endl;
-                    }
+            if(pos != string::npos){
+                string palabraIng = linea.substr(0, pos);
+                string palabraEsp = linea.substr(pos + 1);
 
+                if(palabraIng==datoRecibido){
+                    send(client, palabraEsp.c_str(), palabraEsp.length(), 0);
+                    traduccionEncontrada = true;
+                    cout << datoRecibido << endl;
                 }
+
             }
+        }
+               if(!traduccionEncontrada){
+                cout << "No fue posible encontrar la traduccion para: " + datoRecibido << endl;
             }
+
+        }
 
 }
+
+//CERRAR SESION
+
+/*
+void cerrarSesion(bool verificar){
+    verificar = false;
+
+    int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+    if(bytesRecibidos == -1){
+            cout << "error al recibir la salida" << endl;
+        }else{
+            string datoRecibido(buffer, bytesRecibidos);
+    if(datoRecibido == "cerrar"){
+        closesocket(client);
+            cout << "se cerro la conexion" << endl;
+//                break;
+            }
+        }
+
+
+
+}
+
+*/
+
 
 string ingles(){
 

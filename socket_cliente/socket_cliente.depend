@@ -11,7 +11,7 @@
 
 1694459966 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\main.cpp
 
-1695827081 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
+1697064378 source:d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
 	<iostream>
 	<windows.h>
 	<winsock.h>
@@ -19,8 +19,10 @@
 	<sstream>
 	<string>
 	<limits>
+	<cctype>
+	<ctime>
 
-1697034034 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
+1697064485 d:\bruno\facultad\redes y comunicacion\proyectos\trabajo_redes\socket_cliente\client.cpp
 	<iostream>
 	<windows.h>
 	<winsock.h>

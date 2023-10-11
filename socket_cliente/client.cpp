@@ -232,6 +232,11 @@ void menu(){
         //std::cout << "6- Cerrar sesion(ambos roles)\n";
         std::cin >> op;
 
+
+        //limpiar el buffer
+        limpiarBuffer();
+
+
         send(server, (char *)&op, sizeof(op), 0);
 
 
@@ -283,6 +288,14 @@ void logEvent(const std::string& message) {
         std::cerr << "Error: No se pudo abrir el archivo de registro 'server.log'.\n";
     }
 }
+
+// Función para limpiar el búfer de entrada
+void limpiarBuffer() {
+    // Limpiar el búfer ignorando todos los caracteres hasta el salto de línea
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
 
 
 
