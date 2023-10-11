@@ -114,102 +114,16 @@ public:
         /*
         if(dato == 2){
 
-            FILE *puntero;
-            puntero = fopen ("traduccion.txt", "a");
-            string linea;
-            string palabraIngles;
-
-            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
-
-             if(bytesRecibidos == -1){
-                cout << "error al recibir la traduccion del cliente pepo" << endl;
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
-
-                minusculas(datoRecibido);
-
-                regex formato("^[a-zA-Z]+:[a-zA-Z]+$");
-
-                    if (!regex_match (datoRecibido, formato)){
-                        cout << "No fue posible insertar la traduccion. El formato de insercion debe ser palabraEnIngles:traduccionEnEspaniol" << endl;
-                    }else{
-                            size_t pos = datoRecibido.find(':');
-
-                            if(pos != string::npos){
-                                 palabraIngles = datoRecibido.substr(0,pos);
-                            }
-
-                            if(palabraIngles == ingles()){
-                                cout << "ya existe una traduccion para la palabra: " + datoRecibido << endl;
-                            }
-
-                            cout << "Nueva traduccion recibida: " + datoRecibido <<endl;
-
-                            fprintf(puntero, "%s\n",  datoRecibido.c_str());
-
-                            fclose(puntero);
-
-
-                    }
-
-
-
-            }
+            nuevaTraduccion();
 
         }
 
 
         //INGRESAR USUARIO ALTA (POR AHORA)
         if(dato == 3){
-            int subDato;
-            recv(client, (char *)&subDato, sizeof(subDato), 0);
-
-            if(subDato == 1){
-                FILE *puntero;
-                puntero = fopen ("credenciales.txt", "a");
-                string linea;
-
-                int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
-
-                 if(bytesRecibidos == -1){
-                cout << "error al recibir datos del cliente" << endl;
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
-
-                cout << "nuevo usario recibido: " + datoRecibido << endl;
-
-                // Divide el dato recibido en usuario y contraseña
-                    size_t pos = datoRecibido.find('|');
-                    if (pos != string::npos) {
-
-                    string usuario = datoRecibido.substr(0, pos);
-                    string contrasena = datoRecibido.substr(pos + 1);
-
-                    // Verifica si el usuario es "admin" y no permite su escritura
-                        if (usuario != "admin") {
-
-                                if(!contrasena.empty()){
-                                    fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
-                                    cout << "Nuevo usuario recibido: " + datoRecibido << endl;
-                                }else{
-                                    cout << "NO se puede ingrear un usuario con la contrasena vacia" << endl;                                }
-                        } else {
-                            cout << "No se pudo guardar el usuario 'admin'" << endl;
-                        }
-                    } else {
-                            cout << "Dato recibido no válido: " + datoRecibido << endl;
-                        }
 
 
-                fclose(puntero);
-            }
-        }else{
-            if(subDato==2){
-                cout << "XD" << endl;
-            }
-        }
-
-
+            altaYDesbloqueo();
 
 
         }
@@ -341,6 +255,106 @@ void traduccion(){
         }
 
 }
+
+//NUEVA TRADUCCION
+void nuevaTraduccion(){
+
+        FILE *puntero;
+        puntero = fopen ("traduccion.txt", "a");
+        string linea;
+        string palabraIngles;
+
+        int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+            if(bytesRecibidos == -1){
+                cout << "error al recibir la traduccion del cliente pepo" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+
+                minusculas(datoRecibido);
+
+                regex formato("^[a-zA-Z]+:[a-zA-Z]+$");
+
+                    if (!regex_match (datoRecibido, formato)){
+                        cout << "No fue posible insertar la traduccion. El formato de insercion debe ser palabraEnIngles:traduccionEnEspaniol" << endl;
+                    }else{
+                            size_t pos = datoRecibido.find(':');
+
+                            if(pos != string::npos){
+                                 palabraIngles = datoRecibido.substr(0,pos);
+                            }
+
+                            if(palabraIngles == ingles()){
+                                cout << "ya existe una traduccion para la palabra: " + datoRecibido << endl;
+                            }
+
+                            cout << "Nueva traduccion recibida: " + datoRecibido <<endl;
+
+                            fprintf(puntero, "%s\n",  datoRecibido.c_str());
+
+                            fclose(puntero);
+
+
+                    }
+
+
+
+            }
+
+
+}
+
+//ALTA Y DESBLOQUEO
+void altaYDesbloqueo(){
+        int subDato;
+        recv(client, (char *)&subDato, sizeof(subDato), 0);
+
+            if(subDato == 1){
+                FILE *puntero;
+                puntero = fopen ("credenciales.txt", "a");
+                string linea;
+
+                int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+                 if(bytesRecibidos == -1){
+                cout << "error al recibir datos del cliente" << endl;
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+
+                cout << "nuevo usario recibido: " + datoRecibido << endl;
+
+                // Divide el dato recibido en usuario y contraseña
+                    size_t pos = datoRecibido.find('|');
+                    if (pos != string::npos) {
+
+                    string usuario = datoRecibido.substr(0, pos);
+                    string contrasena = datoRecibido.substr(pos + 1);
+
+                    // Verifica si el usuario es "admin" y no permite su escritura
+                        if (usuario != "admin") {
+
+                                if(!contrasena.empty()){
+                                    fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
+                                    cout << "Nuevo usuario recibido: " + datoRecibido << endl;
+                                }else{
+                                    cout << "NO se puede ingrear un usuario con la contrasena vacia" << endl;                                }
+                        } else {
+                            cout << "No se pudo guardar el usuario 'admin'" << endl;
+                        }
+                    } else {
+                            cout << "Dato recibido no válido: " + datoRecibido << endl;
+                        }
+
+
+                fclose(puntero);
+            }
+        }else{
+            if(subDato==2){
+                cout << "XD" << endl;
+            }
+        }
+}
+
 
 //CERRAR SESION
 
