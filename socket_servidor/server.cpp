@@ -57,14 +57,13 @@ public:
 
                 cout << "---------Cliente conectado---------" << endl;
 
-                menuConexion();
-
+                menuAdmin();
 
             }
             }
             }
 
-         void menuConexion(){
+void menuConexion(){
 
         bool validado = credencial();
         bool verificar = true;
@@ -107,11 +106,9 @@ public:
         }else{
             menuConexion();
         }
-
-
-
+/*
         //NUEVA TRADUCCION
-        /*
+
         if(dato == 2){
 
             nuevaTraduccion();
@@ -129,10 +126,55 @@ public:
         }
         */
 
-        //CERRAR SESION
-
 
 }
+
+void menuAdmin(){
+    bool validado = credencial();
+    bool verificar = true;
+
+    if(validado == true){
+        cout << "test menu admin" << endl;
+
+        int option;
+        recv(client, (char *)&option, sizeof(option),0);
+
+        while(verificar){
+            if(option==1){
+                nuevaTraduccion();
+            }
+
+            if(option==2){
+                altaYDesbloqueo();
+            }
+
+            if(option==0){
+                verificar = false;
+
+                int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+                if(bytesRecibidos == -1){
+                    cout << "error al recibir la salida" << endl;
+                }else{
+                    string datoRecibido(buffer, bytesRecibidos);
+                if(datoRecibido == "cerrar"){
+                    closesocket(client);
+                    cout << "se cerro la conexion" << endl;
+                break;
+                }
+            }
+                }
+
+                }
+
+        }else{
+            menuAdmin();
+        }
+    }
+
+
+
+
 
  //aqui termina SERVER
 
@@ -418,6 +460,35 @@ void trim(string& str) {
     }).base(), str.end());
 }
 
+//manejo usuario
+
+bool manejoUsuario(){
+    string user;
+    bool flag = false;
+
+    int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+     if(bytesRecibidos == -1){
+            cout << "error al recibir usuario" << endl;
+        }else{
+            string datoRecibido(buffer, bytesRecibidos);
+
+            size_t pos = datoRecibido.find('|');
+
+            if(pos != string::npos){
+                user = datoRecibido.substr(0,pos);
+                cout << user <<endl;
+        }
+
+        if(user=="admin"){
+            flag = true;
+        }else{
+            flag = false;
+        }
+}
+
+    return flag;
+}
 
 
 

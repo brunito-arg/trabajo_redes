@@ -8,3 +8,4 @@ carlos|abc123|CONSULTA|3
 romina|romualda|CONSULTA|3 
  
 
+juan|prueba|CONSULTA|3 
