@@ -132,7 +132,7 @@ void subMenu(){
                 cin >> salida;
 
                 if(salida == "/salir"){
-                    menu();
+                    menuAdmin();
                 }
             }
 
@@ -181,32 +181,32 @@ void menuAdmin(){
 
         cout << "MENU DEL ADMINISTRADOR \n";
 
-        cout << "2- Nueva Traduccion(rol ADMIN)\n";
-        cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
-        cout << "4- Ver registro de actividades(rol ADMIN)\n";
-        cout << "5- Cerrar sesion(ambos roles)\n";
+        cout << "1- Nueva Traduccion(rol ADMIN)\n";
+        cout << "2- Usuarios(rol ADMIN) me flata subopciones aca\n";
+        cout << "3- Ver registro de actividades(rol ADMIN)\n";
+        cout << "0- Cerrar sesion(ambos roles)\n";
         std::cin >> option;
 
         send(server, (char *)&option, sizeof(option), 0);
 
         switch(option){
 
-            case 2:
+            case 1:
             std::cout << "Nueva traduccion\n";
             nuevaTraduccion();
             break;
 
-            case 3:
+            case 2:
             std::cout << "Usuarios del sistema\n";
             subMenu();
             break;
 
-            case 4:
+            case 3:
             cout << "Ver registro de actividades\n";
            // ingresarUsuario();
             break;
 
-            case 5:
+            case 0:
             cerrarSesion();
             break;
 

@@ -384,7 +384,7 @@ void altaYDesbloqueo(){
                             cout << "No se pudo guardar el usuario 'admin'" << endl;
                         }
                     } else {
-                            cout << "Dato recibido no válido: " + datoRecibido << endl;
+                            cout << "Dato recibido no valido: " + datoRecibido << endl;
                         }
 
 
