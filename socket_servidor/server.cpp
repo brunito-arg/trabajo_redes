@@ -57,11 +57,87 @@ public:
 
                 cout << "---------Cliente conectado---------" << endl;
 
+
                 menuAdmin();
 
             }
             }
             }
+
+
+//CREDENCIALES TXT
+boolean credencial(){
+
+    std::ifstream archivo("credenciales.txt");
+    std::string linea;
+
+
+        string usuario, contrasena;
+        string credRecibida(buffer);
+        bool credencialesCorrectas = false;
+        // memset(buffer, 0,sizeof(buffer));
+
+
+        int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+        if(bytesRecibidos == -1){
+                cout << "error al recibir usuario" << endl;
+                credencial();
+            }else{
+                string datoRecibido(buffer, bytesRecibidos);
+
+                cout << "usuario recibidos: " + datoRecibido <<endl;
+
+                size_t pos = datoRecibido.find('|');
+
+                if(pos != string::npos){
+                    usuario = datoRecibido.substr(0,pos);
+                    cout << usuario <<endl;
+                    contrasena = datoRecibido.substr(pos + 1);
+                    cout << contrasena << endl;
+
+                     //bandera que verifica si se encontro el usuario
+
+
+                while (std::getline(archivo, linea)){
+                  //  trim(linea);
+                    size_t pos = linea.find('|');
+
+                     if(pos != string::npos){
+
+                        string userTxt = linea.substr(0, pos);
+
+                        size_t pos2 = linea.find('|', pos + 1);
+
+                        if (pos2 != string::npos){
+
+                            string contrasenaTxt = linea.substr (pos + 1, pos2 - pos - 1);
+
+
+                            if (usuario==userTxt && contrasena == contrasenaTxt){
+                                cout << "datos de usuario correctos" << endl;
+                                credencialesCorrectas = true;
+                                break;
+
+                                }
+                        }
+
+
+                     }
+                }
+
+                if(!credencialesCorrectas){
+                    cout << "usuario o contrasena incorrectas" << endl;
+                }
+
+}
+                 send(client, usuario.c_str(), usuario.length(), 0);
+
+}
+
+    return credencialesCorrectas;
+}
+
 
 void menuConexion(){
 
@@ -130,6 +206,7 @@ void menuConexion(){
 }
 
 void menuAdmin(){
+    cout << "test menu admin 1" << endl;
     bool validado = credencial();
     bool verificar = true;
 
@@ -183,78 +260,6 @@ void menuAdmin(){
 
 
 
-//CREDENCIALES TXT
-boolean credencial(){
-
-    std::ifstream archivo("credenciales.txt");
-    std::string linea;
-
-
-        string usuario, contrasena;
-        string credRecibida(buffer);
-        bool credencialesCorrectas = false;
-        // memset(buffer, 0,sizeof(buffer));
-
-
-        int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
-
-        if(bytesRecibidos == -1){
-                cout << "error al recibir usuario" << endl;
-                credencial();
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
-
-                cout << "usuario recibidos: " + datoRecibido <<endl;
-
-                size_t pos = datoRecibido.find('|');
-
-                if(pos != string::npos){
-                    usuario = datoRecibido.substr(0,pos);
-                    cout << usuario <<endl;
-                    contrasena = datoRecibido.substr(pos + 1);
-                    cout << contrasena << endl;
-
-                     //bandera que verifica si se encontro el usuario
-
-
-                while (std::getline(archivo, linea)){
-                  //  trim(linea);
-                    size_t pos = linea.find('|');
-
-                     if(pos != string::npos){
-
-                        string userTxt = linea.substr(0, pos);
-
-                        size_t pos2 = linea.find('|', pos + 1);
-
-                        if (pos2 != string::npos){
-
-                            string contrasenaTxt = linea.substr (pos + 1, pos2 - pos - 1);
-
-
-                            if (usuario==userTxt && contrasena == contrasenaTxt){
-                                cout << "datos de usuario incorrectos" << endl;
-                                credencialesCorrectas = true;
-                                break;
-
-                                }
-                        }
-
-
-                     }
-                }
-
-                if(!credencialesCorrectas){
-                    cout << "usuario o contrasena incorrectas" << endl;
-                }
-
-}
-                 send(client, usuario.c_str(), usuario.length(), 0);
-
-}
-
-    return credencialesCorrectas;
-}
 
 //TRADUCCION METODO SERVER
 void traduccion(){
@@ -488,6 +493,45 @@ bool manejoUsuario(){
 }
 
     return flag;
+}
+
+//obtener rol usuario
+string obtenerRol(){
+    //////////////
+    string usuario;
+
+    int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+     if(bytesRecibidos == -1){
+            cout << "error al recibir usuario" << endl;
+        }else{
+            string datoRecibido(buffer, bytesRecibidos);
+
+            size_t pos = datoRecibido.find('|');
+
+            if(pos != string::npos){
+                usuario = datoRecibido.substr(0,pos);
+                cout << usuario <<endl;
+        }
+
+
+}
+///////
+
+    return usuario;
+
+}
+
+//menu para elegir
+void menu(){
+    string rol = obtenerRol();
+
+    if(rol == "admin"){
+        cout << "test menu admin" << endl;
+        menuAdmin();
+    }else{
+        menuConexion();
+    }
 }
 
 

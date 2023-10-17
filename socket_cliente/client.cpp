@@ -126,6 +126,7 @@ void subMenu(){
                 break;
             case 2:
                 cout << "Desbloqueo: \n";
+                desbloquear();
                 break;
             case 3:
                 cout << "escriba /salir para ir al menu anterior: ";
@@ -161,6 +162,12 @@ void ingresarUsuario(){
             send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
 
             memset(buffer, 0, sizeof(buffer)); //limpio el buffer
+
+}
+
+//usuarios bloqueados
+void desbloquear(){
+    ingresarUsuario();
 
 }
 
