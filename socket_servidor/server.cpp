@@ -57,8 +57,13 @@ public:
 
                 cout << "---------Cliente conectado---------" << endl;
 
-
+                //bueno en principio logro que segun el rol (nombre es lo mismo porque es un solo admin que se llama admin) funcione (creo) el tema es que solo me deja
+                //elegir una opcion del menu si elijko otra se rompe el codigo de servidor y queda en bluce infinito (en especial el cerrar sesion)
+                //por eso esto que trabaje hoy 17/10/2023 no lo subi el github
                 menuAdmin();
+                //menuConexion();
+                //menu();
+
 
             }
             }
@@ -66,74 +71,68 @@ public:
 
 
 //CREDENCIALES TXT
-boolean credencial(){
-
+bool credencial() {
     std::ifstream archivo("credenciales.txt");
     std::string linea;
 
+    string usuario, contrasena;
+    string credRecibida(buffer);
+    bool credencialesCorrectas = false;
 
-        string usuario, contrasena;
-        string credRecibida(buffer);
-        bool credencialesCorrectas = false;
-        // memset(buffer, 0,sizeof(buffer));
+    int bytesRecibidos = recv(client, buffer, sizeof(buffer) - 1, 0);
 
+    if (bytesRecibidos == -1) {
+        // Error al recibir usuario
+        credencial();
+    } else {
+        string datoRecibido(buffer, bytesRecibidos);
 
-        int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+        // Verificar credenciales
+        size_t pos = datoRecibido.find('|');
+        if (pos != string::npos) {
+            usuario = datoRecibido.substr(0, pos);
+            contrasena = datoRecibido.substr(pos + 1);
 
-        if(bytesRecibidos == -1){
-                cout << "error al recibir usuario" << endl;
-                credencial();
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
+            while (std::getline(archivo, linea)) {
+                size_t pos = linea.find('|');
 
-                cout << "usuario recibidos: " + datoRecibido <<endl;
+                if (pos != string::npos) {
+                    string userTxt = linea.substr(0, pos);
+                    size_t pos2 = linea.find('|', pos + 1);
 
-                size_t pos = datoRecibido.find('|');
+                    if (pos2 != string::npos) {
+                        string contrasenaTxt = linea.substr(pos + 1, pos2 - pos - 1);
 
-                if(pos != string::npos){
-                    usuario = datoRecibido.substr(0,pos);
-                    cout << usuario <<endl;
-                    contrasena = datoRecibido.substr(pos + 1);
-                    cout << contrasena << endl;
-
-                     //bandera que verifica si se encontro el usuario
-
-
-                while (std::getline(archivo, linea)){
-                  //  trim(linea);
-                    size_t pos = linea.find('|');
-
-                     if(pos != string::npos){
-
-                        string userTxt = linea.substr(0, pos);
-
-                        size_t pos2 = linea.find('|', pos + 1);
-
-                        if (pos2 != string::npos){
-
-                            string contrasenaTxt = linea.substr (pos + 1, pos2 - pos - 1);
-
-
-                            if (usuario==userTxt && contrasena == contrasenaTxt){
-                                cout << "datos de usuario correctos" << endl;
-                                credencialesCorrectas = true;
-                                break;
-
-                                }
+                        if (usuario == userTxt && contrasena == contrasenaTxt) {
+                            cout << "Datos de usuario correctos" << endl;
+                            credencialesCorrectas = true;
+                            break;
                         }
-
-
-                     }
+                    }
                 }
+            }
 
-                if(!credencialesCorrectas){
-                    cout << "usuario o contrasena incorrectas" << endl;
-                }
+            if (!credencialesCorrectas) {
+                cout << "Usuario o contraseña incorrectas" << endl;
+                const string user = usuario;
+                aumentarIntentosFallidos(user);
+            }
 
-}
-                 send(client, usuario.c_str(), usuario.length(), 0);
+            // Verificación de usuario bloqueado NO ME FUNCIONA DE MOMENTO ESTO DEBERIA DECIRME QUE SI UN USER CON MAS O IGUAL A 3 INTENTOS QUE ESTA BLOQUEADO
+            const string user = usuario;
+            if (usuarioEstaBloqueado(user)) {
+                string mensajeBloqueo = "Usuario bloqueado. Tu cuenta ha sido bloqueada.";
+                send(client, mensajeBloqueo.c_str(), mensajeBloqueo.length(), 0);
+                cout << "Usuario bloqueado: " << usuario << endl;
+                // Cierra el flujo aquí sin continuar a menús
 
-}
+            }else{
+                send(client, usuario.c_str(), usuario.length(), 0);
+            }
+
+
+        }
+    }
 
     return credencialesCorrectas;
 }
@@ -154,6 +153,7 @@ void menuConexion(){
         //TRADUCCION
         if(dato == 1){
             traduccion();
+            break;
 
         }
 
@@ -182,31 +182,13 @@ void menuConexion(){
         }else{
             menuConexion();
         }
-/*
-        //NUEVA TRADUCCION
-
-        if(dato == 2){
-
-            nuevaTraduccion();
-
-        }
-
-
-        //INGRESAR USUARIO ALTA (POR AHORA)
-        if(dato == 3){
-
-
-            altaYDesbloqueo();
-
-
-        }
-        */
 
 
 }
 
 void menuAdmin(){
     cout << "test menu admin 1" << endl;
+
     bool validado = credencial();
     bool verificar = true;
 
@@ -217,12 +199,14 @@ void menuAdmin(){
         recv(client, (char *)&option, sizeof(option),0);
 
         while(verificar){
-            if(option==1){
+            if(option==2){
                 nuevaTraduccion();
+                break;
             }
 
-            if(option==2){
+            if(option==3){
                 altaYDesbloqueo();
+                break;
             }
 
             if(option==0){
@@ -314,7 +298,7 @@ void nuevaTraduccion(){
         int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
             if(bytesRecibidos == -1){
-                cout << "error al recibir la traduccion del cliente pepo" << endl;
+                cout << "error al recibir la traduccion del cliente" << endl;
             }else{
                 string datoRecibido(buffer, bytesRecibidos);
 
@@ -324,6 +308,7 @@ void nuevaTraduccion(){
 
                     if (!regex_match (datoRecibido, formato)){
                         cout << "No fue posible insertar la traduccion. El formato de insercion debe ser palabraEnIngles:traduccionEnEspaniol" << endl;
+                        memset(buffer, 0, sizeof(buffer));  // Limpia el búfer para evitar mensajes no deseados
                     }else{
                             size_t pos = datoRecibido.find(':');
 
@@ -357,76 +342,55 @@ void altaYDesbloqueo(){
         recv(client, (char *)&subDato, sizeof(subDato), 0);
 
             if(subDato == 1){
-                FILE *puntero;
-                puntero = fopen ("credenciales.txt", "a");
-                string linea;
-
-                int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
-
-                 if(bytesRecibidos == -1){
-                cout << "error al recibir datos del cliente" << endl;
-            }else{
-                string datoRecibido(buffer, bytesRecibidos);
-
-                cout << "nuevo usario recibido: " + datoRecibido << endl;
-
-                // Divide el dato recibido en usuario y contraseña
-                    size_t pos = datoRecibido.find('|');
-                    if (pos != string::npos) {
-
-                    string usuario = datoRecibido.substr(0, pos);
-                    string contrasena = datoRecibido.substr(pos + 1);
-
-                    // Verifica si el usuario es "admin" y no permite su escritura
-                        if (usuario != "admin") {
-
-                                if(!contrasena.empty()){
-                                    fprintf(puntero, "%s|CONSULTA|3 \n", datoRecibido.c_str());
-                                    cout << "Nuevo usuario recibido: " + datoRecibido << endl;
-                                }else{
-                                    cout << "NO se puede ingrear un usuario con la contrasena vacia" << endl;                                }
-                        } else {
-                            cout << "No se pudo guardar el usuario 'admin'" << endl;
-                        }
-                    } else {
-                            cout << "Dato recibido no valido: " + datoRecibido << endl;
-                        }
-
-
-                fclose(puntero);
-            }
+               alta();
         }else{
             if(subDato==2){
-                cout << "XD" << endl;
+                desbloquearUsuario();
             }
         }
 }
 
+//ALTA
+void alta(){
+     FILE *puntero;
+     puntero = fopen ("credenciales.txt", "a");
+     string linea;
 
-//CERRAR SESION
-
-/*
-void cerrarSesion(bool verificar){
-    verificar = false;
-
-    int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+     int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
     if(bytesRecibidos == -1){
-            cout << "error al recibir la salida" << endl;
+            cout << "error al recibir datos del cliente" << endl;
         }else{
             string datoRecibido(buffer, bytesRecibidos);
-    if(datoRecibido == "cerrar"){
-        closesocket(client);
-            cout << "se cerro la conexion" << endl;
-//                break;
-            }
+
+            cout << "nuevo usario recibido: " + datoRecibido << endl;
+
+            // Divide el dato recibido en usuario y contraseña
+            size_t pos = datoRecibido.find('|');
+            if (pos != string::npos) {
+
+            string usuario = datoRecibido.substr(0, pos);
+            string contrasena = datoRecibido.substr(pos + 1);
+
+            // Verifica si el usuario es "admin" y no permite su escritura
+            if (usuario != "admin") {
+
+                if(!contrasena.empty()){
+                    fprintf(puntero, "%s|CONSULTA|0 \n", datoRecibido.c_str());
+                    cout << "Nuevo usuario recibido test: " + datoRecibido << endl;
+                }else{
+                    cout << "NO se puede ingrear un usuario con la contrasena vacia" << endl;                                }
+                } else {
+                    cout << "No se pudo guardar el usuario 'admin'" << endl;
+                }
+                } else {
+                    cout << "Dato recibido no valido: " + datoRecibido << endl;
+                    }
+
+
+            fclose(puntero);
         }
-
-
-
 }
-
-*/
 
 
 string ingles(){
@@ -503,7 +467,7 @@ string obtenerRol(){
     int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
      if(bytesRecibidos == -1){
-            cout << "error al recibir usuario" << endl;
+            cout << "error al recibir usuario test1" << endl;
         }else{
             string datoRecibido(buffer, bytesRecibidos);
 
@@ -512,6 +476,7 @@ string obtenerRol(){
             if(pos != string::npos){
                 usuario = datoRecibido.substr(0,pos);
                 cout << usuario <<endl;
+                send(client, usuario.c_str(), usuario.length(), 0);
         }
 
 
@@ -535,7 +500,166 @@ void menu(){
 }
 
 
+//aumentar intentos fallidos de usuario
+void aumentarIntentosFallidos(const string& usuario) {
+    fstream archivo("credenciales.txt", ios::in | ios::out);
 
+    if (!archivo) {
+        cout << "Error al abrir el archivo." << endl;
+        return;
+    }
+
+    string linea;
+    string nuevoContenido;
+    bool usuarioEncontrado = false;
+    int intentosFallidos;
+
+    while (getline(archivo, linea)) {
+        size_t pos = linea.find('|');
+        string usuarioEnArchivo = linea.substr(0, pos);
+
+        if (usuarioEnArchivo == usuario) {
+            intentosFallidos = stoi(linea.substr(linea.find_last_of('|') + 1));
+            intentosFallidos++;
+
+             if (intentosFallidos >= 3) {
+                cout << "Tu usuario esta bloqueado alcanzo los 3 intentos." << endl;
+                string mensajeBloqueo = "Tu usuario esta bloqueado.";
+                send(client, mensajeBloqueo.c_str(), mensajeBloqueo.length(), 0);
+            }
+
+
+            usuarioEncontrado = true;
+            linea = usuario + linea.substr(pos, linea.find_last_of('|') - pos) + "|" + to_string(intentosFallidos);
+        }
+
+        nuevoContenido += linea + '\n';
+    }
+
+    archivo.close();
+
+    if (!usuarioEncontrado) {
+        cout << "Usuario no encontrado." << endl;
+        return;
+    }
+
+        archivo.open("credenciales.txt", ios::out | ios::trunc);
+        archivo << nuevoContenido;
+        archivo.close();
+
+
+
+
+}
+//usuario bloqueado
+bool usuarioEstaBloqueado(const string& usuario) {
+    std::ifstream archivo("credenciales.txt");
+    string linea;
+    bool flag = false;
+
+    while (std::getline(archivo, linea)) {
+        cout << "Línea completa: " << linea << endl;
+        size_t pos = linea.find('|');
+        if (pos != string::npos) {
+            string usuarioTxt = linea.substr(0, pos);
+            cout << "Usuario: " << usuarioTxt << endl;
+
+            size_t pos2 = linea.find('|', pos + 1);
+            if (pos2 != string::npos) {
+                string contrasena = linea.substr(pos + 1, pos2 - pos - 1);
+                cout << "Contraseña: " << contrasena << endl;
+
+                size_t pos3 = linea.find('|', pos2 + 1);
+                if (pos3 != string::npos) {
+                    string rol = linea.substr(pos2 + 1, pos3 - pos2 - 1);
+                    cout << "Rol: " << rol << endl;
+
+                    string intentosStr = linea.substr(pos3 + 1);
+                    cout << "Intentos: " << intentosStr << endl;
+
+                    if (usuarioTxt == usuario && rol != "ADMIN") {
+                        // Verificar si intentosStr es un número antes de intentar convertirlo
+                        if (std::all_of(intentosStr.begin(), intentosStr.end(), ::isdigit)) {
+                            int intentos = std::stoi(intentosStr);
+                            if (intentos >= 3) {
+                                flag = true; // Si el usuario no es ADMIN y tiene 3 o más intentos, está bloqueado
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return flag; // Si no se encuentra el usuario o no cumple las condiciones, no está bloqueado
+}
+
+//desbloquear usuario de almacenamineto
+void desbloquearUsuarioEnAlmacenamiento(const string& usuario) {
+    fstream archivo("credenciales.txt", ios::in | ios::out);
+
+    if (archivo.is_open()) {
+        string linea;
+        size_t pos = 0;
+
+        while (getline(archivo, linea)) {
+            istringstream iss(linea);
+            string user;
+            string contrasena;
+            string rol;
+            int intentos;
+
+            if (getline(iss, user, '|') &&
+                getline(iss, contrasena, '|') &&
+                getline(iss, rol, '|') &&
+                (iss >> intentos)) {
+
+                if (user == usuario && intentos >= 3) {
+                    // Usuario encontrado y bloqueado, restablecer los intentos
+                    intentos = 0;
+                }
+
+                // Reconstruir la línea y escribirla en el archivo
+                archivo.seekp(pos);
+                archivo << user << '|' << contrasena << '|' << rol << '|' << intentos;
+                archivo << endl;
+            }
+
+            pos = archivo.tellp(); // Guarda la posición para futuras modificaciones
+        }
+
+        archivo.close();
+        cout << "Usuario desbloqueado con exito." << endl;
+    } else {
+        cout << "Error al abrir el archivo de credenciales." << endl;
+    }
+}
+
+//desbloquear usuario
+void desbloquearUsuario(){
+    string usuario;
+
+    int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+
+     if(bytesRecibidos == -1){
+            cout << "error al recibir usuario test2" << endl;
+    }else{
+            string datoRecibido(buffer, bytesRecibidos);
+            cout << datoRecibido << endl;
+            usuario = datoRecibido;
+            cout << usuarioEstaBloqueado(usuario) << endl;
+    }
+
+
+    if(usuarioEstaBloqueado(usuario)){
+        desbloquearUsuarioEnAlmacenamiento(usuario);
+        string mensaje = "El usuario fue desbloqueado";
+        send(client, mensaje.c_str(), mensaje.length(), 0);
+    }else{
+        string mensaje = "El usuario no fue desbloqueado";
+        send(client, mensaje.c_str(), mensaje.length(), 0);
+    }
+}
 
 };
 

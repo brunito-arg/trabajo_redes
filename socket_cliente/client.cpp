@@ -44,28 +44,11 @@ public:
             WSACleanup();
             return;
         }else {
+            //////////////////////////
+            ingresarUsuarioSesion();
+            /////////////////////////
 
-            ingresarUsuario();
-
-            int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
-
-            if (bytesRecibidos == -1){
-                cout << "error al recibir rol" << endl;
-            } else {
-                string rol(buffer, bytesRecibidos);
-
-            cout << "ROL: " + rol << endl;
-
-            if(rol == "admin"){
-                menuAdmin();
-            }else{
-                menu();
-            }
-        }
-
-
-
-
+            //int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
 
 
         }
@@ -165,16 +148,89 @@ void ingresarUsuario(){
 
 }
 
-//usuarios bloqueados
-void desbloquear(){
-    ingresarUsuario();
+//ingresar usuario solo para iniciar sesion
+void ingresarUsuarioSesion(){
+            string usuario, contrasena;
+
+            cout << "ingrese su usuario: ";
+            cin >> usuario;
+
+            //limpio el buffer
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            cout << "ingrese su contrasena: ";
+            getline(cin, contrasena);
+            cin.ignore(); //ignora el salto de linea mmm bueno soluciono error de que me comia una letra pero debo ingresar dos veces enter
+
+            cout << contrasena << endl;
+
+            string credencial = usuario + "|" + contrasena;
+
+            send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
+
+             // Recibe la respuesta del servidor
+            int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
+
+            if (bytesRecibidos == -1) {
+                cout << "Error al recibir la respuesta del servidor" << endl;
+            } else {
+                string respuesta(buffer, bytesRecibidos);
+                cout << "respuesta" + respuesta << endl;
+            if (respuesta == "Tu usuario esta bloqueado.") {
+                cout << "Tu usuario esta bloqueado." << endl;
+                // Puedes cerrar la conexión o realizar alguna acción adicional aquí
+            } else {
+                // Continúa con la lógica para mostrar los menús o realizar otras acciones
+                if(usuario == "admin"){
+                menuAdmin();
+                }else{
+                menu();
+            }
+            }
+        }
+
+
+
+            memset(buffer, 0, sizeof(buffer)); //limpio el buffer
+
 
 }
+
+//usuarios bloqueados
+void desbloquear(){
+    string usuario;
+
+    cout << "Ingrese usuario para desbloquear: ";
+    cin >> usuario;
+
+    //limpio el buffer
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    send (server, usuario.c_str(), usuario.length(), 0);
+
+    //recibe la respuesta del servidor
+    int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
+
+    if (bytesRecibidos == -1) {
+        cout << "Error al recibir la respuesta del servidor" << endl;
+    } else {
+        string respuesta(buffer, bytesRecibidos);
+        cout << "respuesta " + respuesta << endl;
+        if (respuesta == "El usuario fue desbloqueado") {
+            cout << "Tu usuario esta desbloqueado\n" << endl;
+        } else if (respuesta == "No se puede desbloquear") {
+            cout << "Este usuario no se puede desbloquear\n";
+        } else {
+            cout << "Respuesta inesperada del servidor\n";
+        }
+    }
+}
+
 
 //CERRAR SESION
 void cerrarSesion(){
     //FALTA PONER UN MENSAJE QUE RECIBA DEL SERVER QUE SE CERRO LA CONEXION
-
+    cout << "se cerro la conexion" << endl;
     closesocket(server);
 
     WSACleanup();
@@ -188,27 +244,30 @@ void menuAdmin(){
 
         cout << "MENU DEL ADMINISTRADOR \n";
 
-        cout << "1- Nueva Traduccion(rol ADMIN)\n";
-        cout << "2- Usuarios(rol ADMIN) me flata subopciones aca\n";
-        cout << "3- Ver registro de actividades(rol ADMIN)\n";
+        cout << "2- Nueva Traduccion(rol ADMIN)\n";
+        cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
+        cout << "4- Ver registro de actividades(rol ADMIN)\n";
         cout << "0- Cerrar sesion(ambos roles)\n";
         std::cin >> option;
+
+        //limpiar el buffer
+        limpiarBuffer();
 
         send(server, (char *)&option, sizeof(option), 0);
 
         switch(option){
 
-            case 1:
+            case 2:
             std::cout << "Nueva traduccion\n";
             nuevaTraduccion();
             break;
 
-            case 2:
+            case 3:
             std::cout << "Usuarios del sistema\n";
             subMenu();
             break;
 
-            case 3:
+            case 4:
             cout << "Ver registro de actividades\n";
            // ingresarUsuario();
             break;
@@ -253,20 +312,6 @@ void menu(){
            traduccion();
             break;
 
-           // case 2:
-            //std::cout << "nueva traduccion ejecutandose\n";
-            //nuevaTraduccion();
-            //break;
-
-            //case 3:
-            //std::cout << "usuarios del sistema\n";
-            //subMenu();
-            //break;
-
-            //case 4:
-           // ingresarUsuario();
-            //break;
-
             case 0:
             cerrarSesion();
             break;
@@ -308,4 +353,4 @@ void limpiarBuffer() {
 
 
 
-    };
+};

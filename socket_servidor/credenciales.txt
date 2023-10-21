@@ -1,2 +1,4 @@
-bruno|pepitos123|ADMIN|3
-admin|ryc@UNLa.2023|ADMIN|3 
+bruno|pepitos123|ADMIN|12
+admin|ryc@UNLa.2023|ADMIN|0
+carlos|abc123|CONSULTA|1
+juan|test|CONSULTA|0
