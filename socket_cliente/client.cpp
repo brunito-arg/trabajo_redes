@@ -149,51 +149,41 @@ void ingresarUsuario(){
 }
 
 //ingresar usuario solo para iniciar sesion
-void ingresarUsuarioSesion(){
-            string usuario, contrasena;
+void ingresarUsuarioSesion() {
+    string usuario, contrasena;
 
-            cout << "ingrese su usuario: ";
-            cin >> usuario;
+    cout << "Ingrese su usuario: ";
+    cin >> usuario;
 
-            //limpio el buffer
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    // Limpia el búfer
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-            cout << "ingrese su contrasena: ";
-            getline(cin, contrasena);
-            cin.ignore(); //ignora el salto de linea mmm bueno soluciono error de que me comia una letra pero debo ingresar dos veces enter
+    cout << "Ingrese su contrasena: ";
+    getline(cin, contrasena);
+    cin.ignore(); // Ignora el salto de línea
 
-            cout << contrasena << endl;
+    string credencial = usuario + "|" + contrasena;
 
-            string credencial = usuario + "|" + contrasena;
+    send(server, credencial.c_str(), credencial.length(), 0); // Envía el usuario y contraseña al servidor
 
-            send (server, credencial.c_str(), credencial.length(), 0); //envio el user al server
+    // Recibe el rol del servidor
+    int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
 
-             // Recibe la respuesta del servidor
-            int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
+    if (bytesRecibidos == -1) {
+        cout << "Error al recibir el rol del servidor" << endl;
+    } else {
+        string rol(buffer, bytesRecibidos);
 
-            if (bytesRecibidos == -1) {
-                cout << "Error al recibir la respuesta del servidor" << endl;
-            } else {
-                string respuesta(buffer, bytesRecibidos);
-                cout << "respuesta" + respuesta << endl;
-            if (respuesta == "Tu usuario esta bloqueado.") {
-                cout << "Tu usuario esta bloqueado." << endl;
-                // Puedes cerrar la conexión o realizar alguna acción adicional aquí
-            } else {
-                // Continúa con la lógica para mostrar los menús o realizar otras acciones
-                if(usuario == "admin"){
-                menuAdmin();
-                }else{
-                menu();
-            }
-            }
+        if (rol == "ADMIN") {
+            menuAdmin(); // Muestra el menú de administrador
+        } else {
+            menu(); // Muestra el menú de usuario estándar
         }
 
+        memset(buffer, 0, sizeof(buffer)); // Limpia el buffer
 
-
-            memset(buffer, 0, sizeof(buffer)); //limpio el buffer
-
-
+        // Resto de la lógica de tu función
+    }
 }
 
 //usuarios bloqueados

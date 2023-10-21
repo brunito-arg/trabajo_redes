@@ -56,11 +56,13 @@ public:
                 if ((client = accept(server, (SOCKADDR *)&clientAddr, &clientAddrSize)) != INVALID_SOCKET) {
 
                 cout << "---------Cliente conectado---------" << endl;
+                registrarActividadPuerto("");
 
                 //bueno en principio logro que segun el rol (nombre es lo mismo porque es un solo admin que se llama admin) funcione (creo) el tema es que solo me deja
                 //elegir una opcion del menu si elijko otra se rompe el codigo de servidor y queda en bluce infinito (en especial el cerrar sesion)
                 //por eso esto que trabaje hoy 17/10/2023 no lo subi el github
-                menuAdmin();
+                credencial();
+               // menuAdmin();
                 //menuConexion();
                 //menu();
 
@@ -69,7 +71,7 @@ public:
             }
             }
 
-
+string usuarioGlobal;
 //CREDENCIALES TXT
 bool credencial() {
     std::ifstream archivo("credenciales.txt");
@@ -78,6 +80,7 @@ bool credencial() {
     string usuario, contrasena;
     string credRecibida(buffer);
     bool credencialesCorrectas = false;
+    string rol; // Variable para almacenar el rol
 
     int bytesRecibidos = recv(client, buffer, sizeof(buffer) - 1, 0);
 
@@ -91,46 +94,57 @@ bool credencial() {
         size_t pos = datoRecibido.find('|');
         if (pos != string::npos) {
             usuario = datoRecibido.substr(0, pos);
+            usuarioGlobal = usuario;
             contrasena = datoRecibido.substr(pos + 1);
+        }
 
-            while (std::getline(archivo, linea)) {
-                size_t pos = linea.find('|');
+        while (std::getline(archivo, linea)) {
+            size_t pos = linea.find('|');
 
-                if (pos != string::npos) {
-                    string userTxt = linea.substr(0, pos);
-                    size_t pos2 = linea.find('|', pos + 1);
+            if (pos != string::npos) {
+                string userTxt = linea.substr(0, pos);
+                size_t pos2 = linea.find('|', pos + 1);
 
-                    if (pos2 != string::npos) {
-                        string contrasenaTxt = linea.substr(pos + 1, pos2 - pos - 1);
+                if (pos2 != string::npos) {
+                    string contrasenaTxt = linea.substr(pos + 1, pos2 - pos - 1);
+                    rol = linea.substr(pos2 + 1); // Almacena el rol
 
-                        if (usuario == userTxt && contrasena == contrasenaTxt) {
-                            cout << "Datos de usuario correctos" << endl;
-                            credencialesCorrectas = true;
-                            break;
+                    if (usuario == userTxt && contrasena == contrasenaTxt) {
+                        cout << "Datos de usuario correctos" << endl;
+                        credencialesCorrectas = true;
+
+                        rol = linea.substr(pos2 + 1);
+                        size_t pos3 = rol.find('|');
+                        if(pos3 != string::npos){
+                            rol = rol.substr(0, pos3);
                         }
+                        break;
                     }
                 }
             }
+        }
 
-            if (!credencialesCorrectas) {
-                cout << "Usuario o contraseña incorrectas" << endl;
-                const string user = usuario;
-                aumentarIntentosFallidos(user);
-            }
-
-            // Verificación de usuario bloqueado NO ME FUNCIONA DE MOMENTO ESTO DEBERIA DECIRME QUE SI UN USER CON MAS O IGUAL A 3 INTENTOS QUE ESTA BLOQUEADO
+        if (!credencialesCorrectas) {
+            cout << "Usuario o contrasena incorrectas" << endl;
             const string user = usuario;
-            if (usuarioEstaBloqueado(user)) {
-                string mensajeBloqueo = "Usuario bloqueado. Tu cuenta ha sido bloqueada.";
-                send(client, mensajeBloqueo.c_str(), mensajeBloqueo.length(), 0);
-                cout << "Usuario bloqueado: " << usuario << endl;
-                // Cierra el flujo aquí sin continuar a menús
+            aumentarIntentosFallidos(user);
+        }
 
+        // Verificación de usuario bloqueado
+        const string user = usuario;
+        if (usuarioEstaBloqueado(user)) {
+            string mensajeBloqueo = "Usuario bloqueado. Tu cuenta ha sido bloqueada.";
+            send(client, mensajeBloqueo.c_str(), mensajeBloqueo.length(), 0);
+            cout << "Usuario bloqueado: " << usuario << endl;
+            // Cierra el flujo aquí sin continuar a menús
+        } else {
+            send(client, rol.c_str(), rol.length(), 0); // Envía el rol al cliente
+            cout << "rol: " + rol << endl;
+            if(rol == "ADMIN"){
+                menuAdmin();
             }else{
-                send(client, usuario.c_str(), usuario.length(), 0);
+                menuConexion();
             }
-
-
         }
     }
 
@@ -139,8 +153,9 @@ bool credencial() {
 
 
 void menuConexion(){
+         registrarActividadEntrada("Inicio de Sesion - Usuario: " + obtenerUsuario());
 
-        bool validado = credencial();
+        bool validado = true; //credencial();
         bool verificar = true;
 
         if(validado == true){
@@ -160,6 +175,8 @@ void menuConexion(){
         if(dato==0){
 
             verificar = false;
+
+            registrarActividadSalida("Cerrando sesión para usuario: " + obtenerUsuario());
 
             int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
@@ -188,8 +205,9 @@ void menuConexion(){
 
 void menuAdmin(){
     cout << "test menu admin 1" << endl;
+     registrarActividadEntrada("Inicio de Sesion - Usuario: " + obtenerUsuario());
 
-    bool validado = credencial();
+    bool validado = true; //credencial();
     bool verificar = true;
 
     if(validado == true){
@@ -211,6 +229,10 @@ void menuAdmin(){
 
             if(option==0){
                 verificar = false;
+
+                registrarActividadSalida("Cerrando sesión para usuario: " + obtenerUsuario());
+
+                cout << obtenerUsuario() << endl;
 
                 int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
@@ -345,7 +367,8 @@ void altaYDesbloqueo(){
                alta();
         }else{
             if(subDato==2){
-                desbloquearUsuario();
+               // desbloquearUsuario();
+               desbloquear();
             }
         }
 }
@@ -558,24 +581,24 @@ bool usuarioEstaBloqueado(const string& usuario) {
     bool flag = false;
 
     while (std::getline(archivo, linea)) {
-        cout << "Línea completa: " << linea << endl;
+        //cout << "Línea completa: " << linea << endl;
         size_t pos = linea.find('|');
         if (pos != string::npos) {
             string usuarioTxt = linea.substr(0, pos);
-            cout << "Usuario: " << usuarioTxt << endl;
+            //cout << "Usuario: " << usuarioTxt << endl;
 
             size_t pos2 = linea.find('|', pos + 1);
             if (pos2 != string::npos) {
                 string contrasena = linea.substr(pos + 1, pos2 - pos - 1);
-                cout << "Contraseña: " << contrasena << endl;
+               // cout << "Contraseña: " << contrasena << endl;
 
                 size_t pos3 = linea.find('|', pos2 + 1);
                 if (pos3 != string::npos) {
                     string rol = linea.substr(pos2 + 1, pos3 - pos2 - 1);
-                    cout << "Rol: " << rol << endl;
+                    //cout << "Rol: " << rol << endl;
 
                     string intentosStr = linea.substr(pos3 + 1);
-                    cout << "Intentos: " << intentosStr << endl;
+                   // cout << "Intentos: " << intentosStr << endl;
 
                     if (usuarioTxt == usuario && rol != "ADMIN") {
                         // Verificar si intentosStr es un número antes de intentar convertirlo
@@ -638,7 +661,6 @@ void desbloquearUsuarioEnAlmacenamiento(const string& usuario) {
 //desbloquear usuario
 void desbloquearUsuario(){
     string usuario;
-
     int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
 
      if(bytesRecibidos == -1){
@@ -660,6 +682,117 @@ void desbloquearUsuario(){
         send(client, mensaje.c_str(), mensaje.length(), 0);
     }
 }
+
+//metodos de desbloquear
+void desbloquear(){
+    listarUsuariosBloqueados();
+    desbloquearUsuario();
+}
+
+//lista usuarios bloqueados
+void listarUsuariosBloqueados() {
+    ifstream archivo("credenciales.txt");
+    string linea;
+
+    bool seEncontraronBloqueados = false;
+
+    while (getline(archivo, linea)) {
+        size_t pos = linea.find('|');
+        if (pos != string::npos) {
+            string usuarioTxt = linea.substr(0, pos);
+            size_t pos2 = linea.find('|', pos + 1);
+            if (pos2 != string::npos) {
+                string contrasena = linea.substr(pos + 1, pos2 - pos - 1);
+                size_t pos3 = linea.find('|', pos2 + 1);
+                if (pos3 != string::npos) {
+                    string rol = linea.substr(pos2 + 1, pos3 - pos2 - 1);
+                    string intentosStr = linea.substr(pos3 + 1);
+
+                    if (rol != "ADMIN" && std::all_of(intentosStr.begin(), intentosStr.end(), ::isdigit)) {
+                        int intentos = std::stoi(intentosStr);
+                        if (intentos >= 3) {
+                            if (!seEncontraronBloqueados) {
+                                cout << "Usuarios bloqueados:" << endl;
+                                seEncontraronBloqueados = true;
+                            }
+                            cout << "Usuario: " << usuarioTxt << endl;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (!seEncontraronBloqueados) {
+        cout << "No se encontraron usuarios bloqueados" << endl;
+    }
+}
+
+//registro de actividades
+void registrarActividadSalida(const std::string& mensaje) {
+    std::ofstream archivoLog("server.log", std::ios::app); // Abre el archivo en modo de escritura y lo crea si no existe
+
+    if (archivoLog.is_open()) {
+        // Obtiene la hora y fecha actual
+        time_t ahora = time(0);
+        tm* tiempo = localtime(&ahora);
+        char buffer[80];
+        strftime(buffer, 80, "[%Y-%m-%d %H:%M:%S]", tiempo);
+
+        // Escribe la marca de tiempo y el mensaje en el archivo
+        archivoLog << buffer << " " << mensaje << std::endl;
+        archivoLog.close(); // Cierra el archivo después de escribir
+    } else {
+        std::cerr << "No se pudo abrir el archivo server.log para registro de actividad." << std::endl;
+    }
+}
+
+//REGISTRAR INICIO SESION
+void registrarActividadEntrada(const std::string& mensaje) {
+    std::ofstream archivoLog("server.log", std::ios::app); // Abre el archivo en modo de escritura y lo crea si no existe
+
+    if (archivoLog.is_open()) {
+        // Obtiene la hora y fecha actual
+        time_t ahora = time(0);
+        tm* tiempo = localtime(&ahora);
+        char buffer[80];
+        strftime(buffer, 80, "[%Y-%m-%d %H:%M:%S]", tiempo);
+
+        // Escribe la marca de tiempo y el mensaje en el archivo
+        archivoLog << buffer << " " << mensaje << std::endl;
+        archivoLog.close(); // Cierra el archivo después de escribir
+    } else {
+        std::cerr << "No se pudo abrir el archivo server.log para registro de actividad." << std::endl;
+    }
+}
+
+//REGISTRAR PUERTO
+void registrarActividadPuerto(const std::string& mensaje) {
+    std::ofstream archivoLog("server.log", std::ios::app); // Abre el archivo en modo de escritura y lo crea si no existe
+
+    if (archivoLog.is_open()) {
+        // Obtiene la hora y fecha actual
+        time_t ahora = time(0);
+        tm* tiempo = localtime(&ahora);
+        char buffer[200];
+        strftime(buffer, 200, "[%Y-%m-%d %H:%M:%S]", tiempo);
+
+        // Escribe la marca de tiempo y el mensaje en el archivo
+        archivoLog << buffer << "=============================" << mensaje << std::endl;
+        archivoLog << buffer << "=======Inicia Servidor======= " << mensaje << std::endl;
+        archivoLog << buffer << "=============================" << mensaje << std::endl;
+        archivoLog << buffer << "Socket creado. Puerto de escucha:5000 " << mensaje << std::endl;
+        archivoLog.close(); // Cierra el archivo después de escribir
+    } else {
+        std::cerr << "No se pudo abrir el archivo server.log para registro de actividad." << std::endl;
+    }
+}
+
+//obtener usuario
+string obtenerUsuario() {
+    return usuarioGlobal;
+}
+
 
 };
 
