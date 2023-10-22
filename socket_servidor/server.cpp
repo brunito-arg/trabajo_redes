@@ -86,7 +86,7 @@ bool credencial() {
 
     if (bytesRecibidos == -1) {
         // Error al recibir usuario
-        credencial();
+        //credencial();
     } else {
         string datoRecibido(buffer, bytesRecibidos);
 
@@ -152,108 +152,74 @@ bool credencial() {
 }
 
 
-void menuConexion(){
-         registrarActividadEntrada("Inicio de Sesion - Usuario: " + obtenerUsuario());
+void menuConexion() {
+    registrarActividadEntrada("Inicio de Sesión - Usuario: " + obtenerUsuario());
 
-        bool validado = true; //credencial();
-        bool verificar = true;
+    bool verificar = true;
 
-        if(validado == true){
-            cout << "test server" << endl;
-
+    while (verificar) {
         int dato;
         recv(client, (char *)&dato, sizeof(dato), 0);
 
-        while(verificar){
-        //TRADUCCION
-        if(dato == 1){
+        // TRADUCCION
+        if (dato == 1) {
             traduccion();
-            break;
-
-        }
-
-        if(dato==0){
-
+        } else if (dato == 0) {
             verificar = false;
-
             registrarActividadSalida("Cerrando sesión para usuario: " + obtenerUsuario());
 
-            int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
+            int bytesRecibidos = recv(client, buffer, sizeof(buffer) - 1, 0);
 
-            if(bytesRecibidos == -1){
-                cout << "error al recibir la salida" << endl;
-            }else{
+            if (bytesRecibidos == -1) {
+                cout << "Error al recibir la salida" << endl;
+            } else {
                 string datoRecibido(buffer, bytesRecibidos);
-            if(datoRecibido == "cerrar"){
-                closesocket(client);
-                cout << "se cerro la conexion" << endl;
-               break;
-            }
-        }
-
-
-        }
-
-        }
-
-        }else{
-            menuConexion();
-        }
-
-
-}
-
-void menuAdmin(){
-    cout << "test menu admin 1" << endl;
-     registrarActividadEntrada("Inicio de Sesion - Usuario: " + obtenerUsuario());
-
-    bool validado = true; //credencial();
-    bool verificar = true;
-
-    if(validado == true){
-        cout << "test menu admin" << endl;
-
-        int option;
-        recv(client, (char *)&option, sizeof(option),0);
-
-        while(verificar){
-            if(option==2){
-                nuevaTraduccion();
-                break;
-            }
-
-            if(option==3){
-                altaYDesbloqueo();
-                break;
-            }
-
-            if(option==0){
-                verificar = false;
-
-                registrarActividadSalida("Cerrando sesión para usuario: " + obtenerUsuario());
-
-                cout << obtenerUsuario() << endl;
-
-                int bytesRecibidos = recv (client, buffer, sizeof(buffer) -1 , 0);
-
-                if(bytesRecibidos == -1){
-                    cout << "error al recibir la salida" << endl;
-                }else{
-                    string datoRecibido(buffer, bytesRecibidos);
-                if(datoRecibido == "cerrar"){
+                if (datoRecibido == "cerrar") {
                     closesocket(client);
-                    cout << "se cerro la conexion" << endl;
-                break;
+                    cout << "Se cerró la conexión" << endl;
                 }
             }
-                }
-
-                }
-
-        }else{
-            menuAdmin();
         }
     }
+}
+
+void menuAdmin() {
+    cout << "Menu de Administrador" << endl;
+    registrarActividadEntrada("Inicio de Sesion - Usuario: " + obtenerUsuario());
+
+    bool verificar = true;
+
+    while (verificar) {
+        int option;
+        recv(client, (char *)&option, sizeof(option), 0);
+
+        if (option == 2) {
+            nuevaTraduccion();
+        } else if (option == 3) {
+            altaYDesbloqueo();
+        } else if (option == 4) { // Nueva opción para mostrar el contenido de server.log
+            mostrarContenidoServerLog();
+        } else if (option == 0) {
+            verificar = false;
+            registrarActividadSalida("Cerrando sesion para usuario: " + obtenerUsuario());
+            cout << obtenerUsuario() << endl;
+            int bytesRecibidos = recv(client, buffer, sizeof(buffer) - 1, 0);
+
+            if (bytesRecibidos == -1) {
+                cout << "Error al recibir la salida" << endl;
+            } else {
+                string datoRecibido(buffer, bytesRecibidos);
+                if (datoRecibido == "cerrar") {
+                    closesocket(client);
+                    cout << "Se cerro la conexion" << endl;
+                }
+            }
+        }
+    }
+}
+
+
+
 
 
 
@@ -359,18 +325,23 @@ void nuevaTraduccion(){
 }
 
 //ALTA Y DESBLOQUEO
-void altaYDesbloqueo(){
-        int subDato;
-        recv(client, (char *)&subDato, sizeof(subDato), 0);
+void altaYDesbloqueo() {
+    int subDato;
+    recv(client, (char *)&subDato, sizeof(subDato), 0);
 
-            if(subDato == 1){
-               alta();
-        }else{
-            if(subDato==2){
-               // desbloquearUsuario();
-               desbloquear();
-            }
+    if (subDato == 1) {
+        alta();
+    } else if (subDato == 2) {
+        // desbloquearUsuario();
+        desbloquear();
+    } else if (subDato == 3) { // Agregamos una nueva opción para volver al menúAdmin
+        string mensaje;
+        recv(client, buffer, sizeof(buffer), 0);
+        mensaje = buffer;
+        if (mensaje == "/salir") {
+            return; // Regresa al menúAdmin
         }
+    }
 }
 
 //ALTA
@@ -791,6 +762,22 @@ void registrarActividadPuerto(const std::string& mensaje) {
 //obtener usuario
 string obtenerUsuario() {
     return usuarioGlobal;
+}
+
+//mostrar contenido server.log
+void mostrarContenidoServerLog() {
+    std::ifstream archivo("server.log");
+    std::string linea;
+
+    if (archivo.is_open()) {
+        while (std::getline(archivo, linea)) {
+            std::cout << linea << std::endl;
+        }
+
+        archivo.close();
+    } else {
+        std::cerr << "No se pudo abrir el archivo server.log" << std::endl;
+    }
 }
 
 

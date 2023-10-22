@@ -1,8 +1,3 @@
+university:universidad
 dog:perro
 cat:gato
-bird:pajaro
-ant:hormiga
-rat:rata
-lion:leon
-fish:pez
-shark:tiburon

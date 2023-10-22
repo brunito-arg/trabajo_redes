@@ -235,7 +235,7 @@ void menuAdmin(){
         cout << "MENU DEL ADMINISTRADOR \n";
 
         cout << "2- Nueva Traduccion(rol ADMIN)\n";
-        cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
+        cout << "3- Usuarios(rol ADMIN)\n";
         cout << "4- Ver registro de actividades(rol ADMIN)\n";
         cout << "0- Cerrar sesion(ambos roles)\n";
         std::cin >> option;
@@ -259,7 +259,7 @@ void menuAdmin(){
 
             case 4:
             cout << "Ver registro de actividades\n";
-           // ingresarUsuario();
+           //ingresarUsuario();
             break;
 
             case 0:
@@ -280,12 +280,8 @@ void menu(){
 
         std::cout << "BIENVENIDO INGRESE UNA OPCION: \n";
 
-        std::cout << "1- Traducir(rol CONSULTA) test\n";
-       // std::cout << "2- Nueva Traduccion(rol ADMIN)\n";
-       // std::cout << "3- Usuarios(rol ADMIN) me flata subopciones aca\n";
-       // std::cout << "4- Ingresar usuario y contrasena (provisorio)\n";
+        std::cout << "1- Traducir(rol CONSULTA)\n";
         std::cout << "0- Cerrar sesion(ambos roles)\n";
-        //std::cout << "6- Cerrar sesion(ambos roles)\n";
         std::cin >> op;
 
 

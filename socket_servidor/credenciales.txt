@@ -1,4 +1,6 @@
-bruno|pepitos123|ADMIN|12
-admin|ryc@UNLa.2023|ADMIN|0
-carlos|abc123|CONSULTA|4
-juan|test|CONSULTA|1
+admin|ryc@UNLa.2023|ADMIN|1
+carlos|abc123|CONSULTA|3
+roberto|123abc|CONSULTA|1
+romina|romualda|CONSULTA|0
+
+mmicaela|L4ffont|CONSULTA|0
