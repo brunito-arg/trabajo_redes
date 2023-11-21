@@ -15,33 +15,33 @@ class Server {
 
 
 public:
-    /* Inicializar WinSock en la aplicaciÛn Servidor */
+    /* Inicializar WinSock en la aplicaci√≥n Servidor */
 
-    WSADATA WSAData;           // Estructura para almacenar informaciÛn sobre la biblioteca Winsock.
+    WSADATA WSAData;           // Estructura para almacenar informaci√≥n sobre la biblioteca Winsock.
     SOCKET server, client;     // Descriptores de socket para el servidor y el cliente.
-    SOCKADDR_IN direccionLocal, clientAddr; // Estructuras para almacenar informaciÛn de direcciones IP y puertos.
-    char buffer[1024];         // B˙fer para almacenar mensajes.
+    SOCKADDR_IN direccionLocal, clientAddr; // Estructuras para almacenar informaci√≥n de direcciones IP y puertos.
+    char buffer[1024];         // B√∫fer para almacenar mensajes.
 
     Server() {
-        // Inicializa la biblioteca Winsock con la versiÛn 2.0.
+        // Inicializa la biblioteca Winsock con la versi√≥n 2.0.
         WSAStartup(MAKEWORD(2, 0), &WSAData);
 
         // Crea un socket para el servidor con IPv4 y protocolo TCP.
         server = socket(AF_INET, SOCK_STREAM, 0);
 
-        // Configura la direcciÛn y el puerto del servidor.
+        // Configura la direcci√≥n y el puerto del servidor.
         direccionLocal.sin_addr.s_addr = INADDR_ANY;
         direccionLocal.sin_family = AF_INET;
         int puerto = 5005;
         direccionLocal.sin_port = htons(puerto);  // Puerto 5005.
 
-        /*La funciÛn bind() utilizada asocia una direcciÛn local con el socket.
-        En este caso estamos especificando que el socket deber· recibir llamadas entrantes en cuyo port destino se especifice 5005.*/
+        /*La funci√≥n bind() utilizada asocia una direcci√≥n local con el socket.
+        En este caso estamos especificando que el socket deber√° recibir llamadas entrantes en cuyo port destino se especifice 5005.*/
         bind(server, (SOCKADDR *)&direccionLocal, sizeof(direccionLocal));
 
         // listen(x,x) habilita al servidor para escuchar conexiones entrantes.
-        //El ˙ltimo par·metro especifica la cantidad de conexiones que pueden ser encoladas en espera de ser atendidas
-        //Si se recibe m·s llamadas, las mismas ser·n rechazadas autom·ticamente.
+        //El √∫ltimo par√°metro especifica la cantidad de conexiones que pueden ser encoladas en espera de ser atendidas
+        //Si se recibe m√°s llamadas, las mismas ser√°n rechazadas autom√°ticamente.
         listen(server, 1); // 0 no permite conexiones en espera, 1 vamos a decir que permite 1 cliente en espera
 
         cout << "==================================" << endl;
@@ -130,15 +130,15 @@ bool credencial() {
             aumentarIntentosFallidos(user);
         }
 
-        // VerificaciÛn de usuario bloqueado
+        // Verificaci√≥n de usuario bloqueado
         const string user = usuario;
         if (usuarioEstaBloqueado(user)) {
             string mensajeBloqueo = "Usuario bloqueado. Tu cuenta ha sido bloqueada.";
             send(client, mensajeBloqueo.c_str(), mensajeBloqueo.length(), 0);
             cout << "Usuario bloqueado: " << usuario << endl;
-            // Cierra el flujo aquÌ sin continuar a men˙s
+            // Cierra el flujo aqu√≠ sin continuar a men√∫s
         } else {
-            send(client, rol.c_str(), rol.length(), 0); // EnvÌa el rol al cliente
+            send(client, rol.c_str(), rol.length(), 0); // Env√≠a el rol al cliente
             cout << "rol: " + rol << endl;
             if(rol == "ADMIN"){
                 menuAdmin();
@@ -153,7 +153,7 @@ bool credencial() {
 
 
 void menuConexion() {
-    registrarActividadEntrada("Inicio de SesiÛn - Usuario: " + obtenerUsuario());
+    registrarActividadEntrada("Inicio de Sesi√≥n - Usuario: " + obtenerUsuario());
 
     bool verificar = true;
 
@@ -166,7 +166,7 @@ void menuConexion() {
             traduccion();
         } else if (dato == 0) {
             verificar = false;
-            registrarActividadSalida("Cerrando sesiÛn para usuario: " + obtenerUsuario());
+            registrarActividadSalida("Cerrando sesi√≥n para usuario: " + obtenerUsuario());
 
             int bytesRecibidos = recv(client, buffer, sizeof(buffer) - 1, 0);
 
@@ -176,7 +176,7 @@ void menuConexion() {
                 string datoRecibido(buffer, bytesRecibidos);
                 if (datoRecibido == "cerrar") {
                     closesocket(client);
-                    cout << "Se cerrÛ la conexiÛn" << endl;
+                    cout << "Se cerr√≥ la conexi√≥n" << endl;
                 }
             }
         }
@@ -197,7 +197,7 @@ void menuAdmin() {
             nuevaTraduccion();
         } else if (option == 3) {
             altaYDesbloqueo();
-        } else if (option == 4) { // Nueva opciÛn para mostrar el contenido de server.log
+        } else if (option == 4) { // Nueva opci√≥n para mostrar el contenido de server.log
             mostrarContenidoServerLog();
         } else if (option == 0) {
             verificar = false;
@@ -296,7 +296,7 @@ void nuevaTraduccion(){
 
                     if (!regex_match (datoRecibido, formato)){
                         cout << "No fue posible insertar la traduccion. El formato de insercion debe ser palabraEnIngles:traduccionEnEspaniol" << endl;
-                        memset(buffer, 0, sizeof(buffer));  // Limpia el b˙fer para evitar mensajes no deseados
+                        memset(buffer, 0, sizeof(buffer));  // Limpia el b√∫fer para evitar mensajes no deseados
                     }else{
                             size_t pos = datoRecibido.find(':');
 
@@ -334,12 +334,12 @@ void altaYDesbloqueo() {
     } else if (subDato == 2) {
         // desbloquearUsuario();
         desbloquear();
-    } else if (subDato == 3) { // Agregamos una nueva opciÛn para volver al men˙Admin
+    } else if (subDato == 3) { // Agregamos una nueva opci√≥n para volver al men√∫Admin
         string mensaje;
         recv(client, buffer, sizeof(buffer), 0);
         mensaje = buffer;
         if (mensaje == "/salir") {
-            return; // Regresa al men˙Admin
+            return; // Regresa al men√∫Admin
         }
     }
 }
@@ -359,7 +359,7 @@ void alta(){
 
             cout << "nuevo usario recibido: " + datoRecibido << endl;
 
-            // Divide el dato recibido en usuario y contraseÒa
+            // Divide el dato recibido en usuario y contrase√±a
             size_t pos = datoRecibido.find('|');
             if (pos != string::npos) {
 
@@ -552,7 +552,7 @@ bool usuarioEstaBloqueado(const string& usuario) {
     bool flag = false;
 
     while (std::getline(archivo, linea)) {
-        //cout << "LÌnea completa: " << linea << endl;
+        //cout << "L√≠nea completa: " << linea << endl;
         size_t pos = linea.find('|');
         if (pos != string::npos) {
             string usuarioTxt = linea.substr(0, pos);
@@ -561,7 +561,7 @@ bool usuarioEstaBloqueado(const string& usuario) {
             size_t pos2 = linea.find('|', pos + 1);
             if (pos2 != string::npos) {
                 string contrasena = linea.substr(pos + 1, pos2 - pos - 1);
-               // cout << "ContraseÒa: " << contrasena << endl;
+               // cout << "Contrase√±a: " << contrasena << endl;
 
                 size_t pos3 = linea.find('|', pos2 + 1);
                 if (pos3 != string::npos) {
@@ -572,11 +572,11 @@ bool usuarioEstaBloqueado(const string& usuario) {
                    // cout << "Intentos: " << intentosStr << endl;
 
                     if (usuarioTxt == usuario && rol != "ADMIN") {
-                        // Verificar si intentosStr es un n˙mero antes de intentar convertirlo
+                        // Verificar si intentosStr es un n√∫mero antes de intentar convertirlo
                         if (std::all_of(intentosStr.begin(), intentosStr.end(), ::isdigit)) {
                             int intentos = std::stoi(intentosStr);
                             if (intentos >= 3) {
-                                flag = true; // Si el usuario no es ADMIN y tiene 3 o m·s intentos, est· bloqueado
+                                flag = true; // Si el usuario no es ADMIN y tiene 3 o m√°s intentos, est√° bloqueado
                             }
                         }
                     }
@@ -585,7 +585,7 @@ bool usuarioEstaBloqueado(const string& usuario) {
         }
     }
 
-    return flag; // Si no se encuentra el usuario o no cumple las condiciones, no est· bloqueado
+    return flag; // Si no se encuentra el usuario o no cumple las condiciones, no est√° bloqueado
 }
 
 //desbloquear usuario de almacenamineto
@@ -613,13 +613,13 @@ void desbloquearUsuarioEnAlmacenamiento(const string& usuario) {
                     intentos = 0;
                 }
 
-                // Reconstruir la lÌnea y escribirla en el archivo
+                // Reconstruir la l√≠nea y escribirla en el archivo
                 archivo.seekp(pos);
                 archivo << user << '|' << contrasena << '|' << rol << '|' << intentos;
                 archivo << endl;
             }
 
-            pos = archivo.tellp(); // Guarda la posiciÛn para futuras modificaciones
+            pos = archivo.tellp(); // Guarda la posici√≥n para futuras modificaciones
         }
 
         archivo.close();
@@ -712,7 +712,7 @@ void registrarActividadSalida(const std::string& mensaje) {
 
         // Escribe la marca de tiempo y el mensaje en el archivo
         archivoLog << buffer << " " << mensaje << std::endl;
-        archivoLog.close(); // Cierra el archivo despuÈs de escribir
+        archivoLog.close(); // Cierra el archivo despu√©s de escribir
     } else {
         std::cerr << "No se pudo abrir el archivo server.log para registro de actividad." << std::endl;
     }
@@ -731,7 +731,7 @@ void registrarActividadEntrada(const std::string& mensaje) {
 
         // Escribe la marca de tiempo y el mensaje en el archivo
         archivoLog << buffer << " " << mensaje << std::endl;
-        archivoLog.close(); // Cierra el archivo despuÈs de escribir
+        archivoLog.close(); // Cierra el archivo despu√©s de escribir
     } else {
         std::cerr << "No se pudo abrir el archivo server.log para registro de actividad." << std::endl;
     }
@@ -753,7 +753,7 @@ void registrarActividadPuerto(const std::string& mensaje) {
         archivoLog << buffer << "=======Inicia Servidor======= " << mensaje << std::endl;
         archivoLog << buffer << "=============================" << mensaje << std::endl;
         archivoLog << buffer << "Socket creado. Puerto de escucha:5000 " << mensaje << std::endl;
-        archivoLog.close(); // Cierra el archivo despuÈs de escribir
+        archivoLog.close(); // Cierra el archivo despu√©s de escribir
     } else {
         std::cerr << "No se pudo abrir el archivo server.log para registro de actividad." << std::endl;
     }
@@ -771,7 +771,8 @@ void mostrarContenidoServerLog() {
 
     if (archivo.is_open()) {
         while (std::getline(archivo, linea)) {
-            std::cout << linea << std::endl;
+            send(client, linea.c_str(), linea.size(), 0);
+            send(client, "\n", 1, 0); // Env√≠a un salto de l√≠nea
         }
 
         archivo.close();
