@@ -13,7 +13,7 @@ using namespace std;
 
 class Client {
 public:
-    /* Inicializar WinSock en la aplicación Cliente */
+    /* Inicializar WinSock en la aplicaciÃ³n Cliente */
 
     WSADATA WSAData;
     SOCKET server;
@@ -23,14 +23,14 @@ public:
     Client() {
         cout << "Conectando al servidor..." << endl << endl;
 
-        // Inicializa la biblioteca Winsock con la versión 2.0.
+        // Inicializa la biblioteca Winsock con la versiÃ³n 2.0.
         WSAStartup(MAKEWORD(2, 0), &WSAData);
 
         // Crea un socket para el cliente con IPv4 y protocolo TCP.
         server = socket(AF_INET, SOCK_STREAM, 0);
 
-        // Configura la dirección IP y el puerto del servidor al que se conectará el cliente.
-        direccionServer.sin_addr.s_addr = inet_addr("192.168.0.135"); // dirección IP del servidor, corresponde a la de misma ip de la maquina si el servidor y cliente estan en la misma.
+        // Configura la direcciÃ³n IP y el puerto del servidor al que se conectarÃ¡ el cliente.
+        direccionServer.sin_addr.s_addr = inet_addr("192.168.0.135"); // direcciÃ³n IP del servidor, corresponde a la de misma ip de la maquina si el servidor y cliente estan en la misma.
         direccionServer.sin_family = AF_INET;
 
         int puerto;
@@ -38,7 +38,7 @@ public:
         cin >> puerto;
         direccionServer.sin_port = htons(puerto); // Puerto 5005 (debe coincidir con el del servidor).
 
-        // Establece la conexión con el servidor. Si es 0 la conexion se realizo con exito, sino informa error
+        // Establece la conexiÃ³n con el servidor. Si es 0 la conexion se realizo con exito, sino informa error
         if(connect(server, (SOCKADDR *)&direccionServer, sizeof(direccionServer)) != 0){
             cout << "Error al conectar al servidor" << endl;
             WSACleanup();
@@ -155,16 +155,16 @@ void ingresarUsuarioSesion() {
     cout << "Ingrese su usuario: ";
     cin >> usuario;
 
-    // Limpia el búfer
+    // Limpia el bÃºfer
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     cout << "Ingrese su contrasena: ";
     getline(cin, contrasena);
-    cin.ignore(); // Ignora el salto de línea
+    cin.ignore(); // Ignora el salto de lÃ­nea
 
     string credencial = usuario + "|" + contrasena;
 
-    send(server, credencial.c_str(), credencial.length(), 0); // Envía el usuario y contraseña al servidor
+    send(server, credencial.c_str(), credencial.length(), 0); // EnvÃ­a el usuario y contraseÃ±a al servidor
 
     // Recibe el rol del servidor
     int bytesRecibidos = recv(server, buffer, sizeof(buffer), 0);
@@ -175,14 +175,14 @@ void ingresarUsuarioSesion() {
         string rol(buffer, bytesRecibidos);
 
         if (rol == "ADMIN") {
-            menuAdmin(); // Muestra el menú de administrador
+            menuAdmin(); // Muestra el menÃº de administrador
         } else {
-            menu(); // Muestra el menú de usuario estándar
+            menu(); // Muestra el menÃº de usuario estÃ¡ndar
         }
 
         memset(buffer, 0, sizeof(buffer)); // Limpia el buffer
 
-        // Resto de la lógica de tu función
+        // Resto de la lÃ³gica de tu funciÃ³n
     }
 }
 
@@ -259,7 +259,7 @@ void menuAdmin(){
 
             case 4:
             cout << "Ver registro de actividades\n";
-           //ingresarUsuario();
+           mostrarServerLog();
             break;
 
             case 0:
@@ -327,11 +327,22 @@ void logEvent(const std::string& message) {
     }
 }
 
-// Función para limpiar el búfer de entrada
+// FunciÃ³n para limpiar el bÃºfer de entrada
 void limpiarBuffer() {
-    // Limpiar el búfer ignorando todos los caracteres hasta el salto de línea
+    // Limpiar el bÃºfer ignorando todos los caracteres hasta el salto de lÃ­nea
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+//funcion para mostrar contenido del server log
+void mostrarServerLog(){
+
+    int bytesRead;
+
+    while ((bytesRead = recv(server, buffer, sizeof(buffer), 0)) > 0) {
+    std::cout.write(buffer, bytesRead);
+}
+
 }
 
 
